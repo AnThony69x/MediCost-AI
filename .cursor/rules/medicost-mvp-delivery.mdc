@@ -1,0 +1,21 @@
+---
+description: Favor MVP-first implementations with testable and incremental changes
+alwaysApply: true
+---
+
+# MVP Delivery Rules
+
+- Prefer the simplest implementation that ships MVP scope first:
+  - Basic chat flow
+  - Rule-based symptom classification (before advanced AI)
+  - Supabase data query
+  - Copay calculation
+  - Hospital comparison and recommendation
+- Build in phases: simple rules first, AI enhancement second, optimization later.
+- When uncertain, choose clarity and maintainability over premature complexity.
+
+## Quality expectations
+
+- Any change touching `coverage_rules` must include documentation and reproducible sample data in `database/`.
+- Add or update tests when business rules change (copay, ranking, specialty mapping).
+- Keep responses and UI output understandable for non-technical end users.

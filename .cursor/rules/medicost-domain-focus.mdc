@@ -1,0 +1,17 @@
+---
+description: Keep solutions aligned with MediCost-AI domain goals
+alwaysApply: true
+---
+
+# MediCost Domain Focus
+
+- Prioritize patient value: specialty guidance, coverage clarity, copay estimation, and in-network hospital choice.
+- Treat medical cost guidance as sensitive user-facing output: be explicit, understandable, and auditable.
+- Preserve the core flow: symptoms -> specialty -> coverage lookup -> copay calculation -> hospital ranking -> recommendation.
+- Avoid adding features that drift from MVP goals unless explicitly requested.
+
+## Required consistency
+
+- Any logic involving copay must follow `copago = costo_servicio * (1 - cobertura)` unless requirements change.
+- Hospital recommendation logic should optimize for lower out-of-pocket cost inside network constraints.
+- Keep terminology consistent across code and docs: specialty, coverage, copay, network hospital.
