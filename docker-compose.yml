@@ -1,0 +1,41 @@
+version: "3.9"
+
+services:
+
+  frontend:
+    build: ./frontend
+    container_name: medicost_frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:8000
+    depends_on:
+      - backend
+    restart: always
+
+  backend:
+    build: ./backend
+    container_name: medicost_backend
+    ports:
+      - "8000:8000"
+    environment:
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_KEY=${SUPABASE_KEY}
+    restart: always
+
+  # Opcional (solo si NO usas Supabase en la nube)
+  db:
+    image: postgres:15
+    container_name: medicost_db
+    environment:
+      POSTGRES_DB: medicost
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+
+volumes:
+  postgres_data:
