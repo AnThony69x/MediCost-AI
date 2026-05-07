@@ -1,0 +1,62 @@
+# Variables de entorno
+.env
+.env.local
+.env.*.local
+.mcp.json
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+dist/
+build/
+.next/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+env/
+.venv
+pip-log.txt
+pip-delete-this-directory.txt
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+
+# Logs
+logs/
+*.log
+
+# Temporal
+*.tmp
+*.temp
+.cache/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Base de datos local (si aplica)
+*.db
+*.sqlite
+*.sqlite3
+
+# Docker
+.dockerignore
+
+# Otros
+.git/
+node_modules/
+.turbo/
