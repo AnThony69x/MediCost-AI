@@ -21,21 +21,21 @@ function ListaHospitales({ hospitales }: ListaHospitalesProps) {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between px-1">
-        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Opciones de Red</p>
+        <p className="hospitales-heading text-[10px] font-bold uppercase tracking-widest">Opciones de Red</p>
         <div className="flex gap-1">
           <div className="h-1 w-4 rounded-full bg-primary" />
-          <div className="h-1 w-1 rounded-full bg-slate-800" />
-          <div className="h-1 w-1 rounded-full bg-slate-800" />
+          <div className="hospitales-dot h-1 w-1 rounded-full" />
+          <div className="hospitales-dot h-1 w-1 rounded-full" />
         </div>
       </div>
       
-      <div className="rounded-2xl border border-white/5 bg-slate-950/30 p-2 sm:p-3">
-      {/* Mobile/Tablet: Horizontal carousel | Desktop: 2-column grid */}
-      <div className="flex gap-3 overflow-x-auto pb-2 pt-1 pr-1 snap-x snap-mandatory scroll-smooth custom-scrollbar lg:grid lg:grid-cols-2 lg:overflow-visible lg:snap-none lg:pb-0 lg:pt-0 lg:pr-0">
+      <div className="hospitales-shell rounded-2xl border p-2 sm:p-3 overflow-x-hidden">
+      {/* Mobile: single column to prevent overflow | Desktop: 2-column grid */}
+      <div className="grid grid-cols-1 gap-3 pb-1 pt-1 min-w-0 lg:grid-cols-2 lg:pb-0 lg:pt-0">
         {ordenados.map((hospital) => (
           <div 
             key={hospital.nombre} 
-            className="shrink-0 snap-start w-[88%] min-w-[240px] sm:w-[72%] sm:min-w-[300px] lg:w-auto lg:min-w-0 lg:shrink"
+            className="w-full min-w-0"
           >
             <TarjetaHospital
               nombre={hospital.nombre}
@@ -48,8 +48,8 @@ function ListaHospitales({ hospitales }: ListaHospitalesProps) {
       </div>
       </div>
       
-      <p className="text-[10px] text-slate-500 italic px-1">
-        * Desliza para comparar otros centros médicos
+      <p className="hospitales-footnote text-[10px] italic px-1">
+        * Compara centros médicos y elige el menor copago
       </p>
     </div>
   )

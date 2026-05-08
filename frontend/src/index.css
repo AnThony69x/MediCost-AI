@@ -447,4 +447,86 @@
   color: #1d4ed8;
 }
 
+.hospitales-heading,
+.hospitales-footnote {
+  color: #64748b;
+}
+
+.hospitales-dot {
+  background: #1e293b;
+}
+
+.hospitales-shell {
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(2, 6, 23, 0.3);
+}
+
+.hospital-card-normal {
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(2, 6, 23, 0.32);
+}
+
+.hospital-card-destacado {
+  background: rgba(15, 23, 42, 0.82);
+}
+
+.hospital-card-title {
+  color: #ffffff;
+}
+
+.hospital-card-subtitle {
+  color: #64748b;
+}
+
+.hospital-card-row {
+  background: rgba(2, 6, 23, 0.4);
+  color: #94a3b8;
+}
+
+.hospital-card-value {
+  color: #ffffff;
+}
+
+.theme-light .hospitales-heading,
+.theme-light .hospitales-footnote {
+  color: #475569;
+}
+
+.theme-light .hospitales-dot {
+  background: #94a3b8;
+}
+
+.theme-light .hospitales-shell {
+  border-color: var(--line-medium);
+  background: color-mix(in srgb, var(--surface-3) 94%, transparent);
+}
+
+.theme-light .hospital-card-normal {
+  border-color: var(--line-medium);
+  background: color-mix(in srgb, var(--surface-3) 96%, transparent);
+}
+
+.theme-light .hospital-card-destacado {
+  border-color: rgba(37, 99, 235, 0.32);
+  background: linear-gradient(180deg, rgba(219, 234, 254, 0.7), rgba(255, 255, 255, 0.95));
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.15);
+}
+
+.theme-light .hospital-card-title {
+  color: #0f172a;
+}
+
+.theme-light .hospital-card-subtitle {
+  color: #475569;
+}
+
+.theme-light .hospital-card-row {
+  background: #eff6ff;
+  color: #334155;
+}
+
+.theme-light .hospital-card-value {
+  color: #0f172a;
+}
+
 
