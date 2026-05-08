@@ -54,13 +54,18 @@ export function useChat() {
       ])
     } catch (error) {
       console.error('Chat error', error)
-      setError('No pudimos obtener una respuesta. Intenta de nuevo.')
+      const mensajeError =
+        error instanceof Error
+          ? error.message
+          : 'No pudimos obtener una respuesta. Intenta de nuevo.'
+
+      setError(mensajeError)
       setMensajes((prev) => [
         ...prev,
         {
           id: generarId(),
           tipo: 'sistema',
-          texto: 'Tuvimos un problema al procesar la solicitud.',
+          texto: mensajeError,
         },
       ])
     } finally {
