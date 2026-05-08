@@ -1,7 +1,6 @@
 version: "3.9"
 
 services:
-
   frontend:
     build: ./frontend
     container_name: medicost_frontend
@@ -18,7 +17,16 @@ services:
     container_name: medicost_backend
     ports:
       - "8000:8000"
+    env_file:
+      - ./backend/.env
     environment:
       - SUPABASE_URL=${SUPABASE_URL}
       - SUPABASE_KEY=${SUPABASE_KEY}
+      - GEMINI_KEY=${GEMINI_KEY:-}
+      - DEBUG=${DEBUG:-false}
     restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
