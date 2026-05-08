@@ -46,7 +46,7 @@ function HeroPrincipal() {
 
   return (
 
-    <section id="inicio" ref={container} className="py-12 lg:py-24">
+    <section id="inicio" ref={container} className="pt-0 pb-12 lg:pt-8 lg:pb-24">
       <div className="relative glass-card rounded-[3rem] p-8 lg:p-16 overflow-hidden border-white/10 shadow-glow-primary">
         {/* Interior background light */}
         <div className="absolute top-0 right-0 -z-10 w-1/2 h-full bg-gradient-to-l from-primary/5 to-transparent" />

@@ -133,7 +133,7 @@ function CajaChat({ variant = 'default' }: CajaChatProps) {
         ref={contenedorRef}
         onScroll={manejarScroll}
         data-lenis-prevent
-        className="flex-1 overflow-y-auto overflow-x-hidden px-3 sm:px-6 lg:px-8 py-3 sm:py-5 lg:py-6 scroll-smooth custom-scrollbar relative bg-slate-950/40"
+        className="flex-1 overflow-y-auto overflow-x-hidden px-3 sm:px-6 lg:px-8 pt-1 pb-3 sm:pt-3 sm:pb-5 lg:pt-4 lg:pb-6 scroll-smooth custom-scrollbar relative bg-slate-950/40"
       >
         {mostrarEstadoInicial ? (
           <div className="absolute inset-0 flex items-center justify-center px-6">
