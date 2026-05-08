@@ -9,11 +9,12 @@ type ListaHospitalesProps = {
 function ListaHospitales({ hospitales }: ListaHospitalesProps) {
   if (!hospitales || hospitales.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-stroke bg-white p-4 text-sm text-muted">
+      <div className="rounded-2xl border border-dashed border-slate-800 bg-slate-900/40 p-4 text-sm text-slate-500">
         No hay hospitales disponibles para esta consulta.
       </div>
     )
   }
+
 
   const ordenados = [...hospitales].sort((a, b) => a.copago - b.copago)
   const mejor = ordenados[0]

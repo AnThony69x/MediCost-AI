@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowLeft, Sparkles, Zap } from 'lucide-react'
+import { ArrowLeft, Zap } from 'lucide-react'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import CajaChat from '../components/chat/CajaChat'
@@ -39,24 +39,24 @@ function PaginaChat() {
         <div className="flex items-center gap-4">
           <Link
             to="/"
-            className="group flex h-10 w-10 items-center justify-center rounded-full bg-white text-muted shadow-soft transition-all hover:bg-accent hover:text-white"
+            className="group flex h-10 w-10 items-center justify-center rounded-full bg-slate-900 text-slate-400 border border-slate-800 transition-all hover:bg-primary hover:text-white hover:border-primary"
           >
             <ArrowLeft size={20} />
           </Link>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl font-bold text-ink">
+              <h1 className="text-xl font-bold text-white">
                 Asistente MediCost
               </h1>
-              <span className="flex h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+              <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
             </div>
-            <p className="text-xs text-muted font-medium">
+            <p className="text-xs text-slate-500 font-medium">
               IA Médica en tiempo real
             </p>
           </div>
         </div>
         
-        <div className="hidden sm:flex items-center gap-2 rounded-full bg-accent/10 px-4 py-2 text-xs font-bold text-accent">
+        <div className="hidden sm:flex items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-4 py-2 text-xs font-bold text-primary">
           <Zap size={14} />
           <span>ALTA PRECISIÓN</span>
         </div>
@@ -68,10 +68,10 @@ function PaginaChat() {
             key={texto}
             className="guide-step glass-card flex items-center gap-3 rounded-2xl p-4 transition-transform hover:scale-[1.02]"
           >
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent/10 text-xs font-bold text-accent">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-xs font-bold text-primary">
               0{index + 1}
             </div>
-            <p className="text-xs font-semibold text-ink/80">{texto}</p>
+            <p className="text-xs font-semibold text-slate-300">{texto}</p>
           </div>
         ))}
       </div>
@@ -82,6 +82,7 @@ function PaginaChat() {
     </div>
   )
 }
+
 
 export default PaginaChat
 

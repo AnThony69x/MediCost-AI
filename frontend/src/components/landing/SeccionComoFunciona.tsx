@@ -69,11 +69,11 @@ function SeccionComoFunciona() {
   return (
     <section id="como-funciona" ref={container} className="py-24 sm:py-32">
       <div className="section-header mb-16 text-center lg:text-left">
-        <p className="text-sm font-bold uppercase tracking-widest text-accent mb-4">Proceso Inteligente</p>
-        <h2 className="text-4xl font-bold text-ink sm:text-5xl">
+        <p className="text-sm font-bold uppercase tracking-widest text-primary mb-4">Proceso Inteligente</p>
+        <h2 className="text-4xl font-bold text-white sm:text-5xl">
           ¿Cómo funciona?
         </h2>
-        <p className="mt-6 max-w-2xl text-lg text-muted">
+        <p className="mt-6 max-w-2xl text-lg text-slate-400">
           Cuatro pasos claros para transformar tus dudas en decisiones financieras inteligentes.
         </p>
       </div>
@@ -82,18 +82,18 @@ function SeccionComoFunciona() {
         {pasos.map(({ titulo, descripcion, Icon }, i) => (
           <div
             key={titulo}
-            className="step-card group relative p-8 glass-card rounded-3xl transition-all duration-300 hover:-translate-y-2 hover:shadow-strong"
+            className="step-card group relative p-8 glass-card rounded-3xl transition-all duration-300 hover:-translate-y-2 hover:bg-slate-900/60"
           >
-            <div className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-accent/10 text-accent transition-colors group-hover:bg-accent group-hover:text-white">
+            <div className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-white">
               <Icon size={28} />
             </div>
             
-            <div className="absolute top-8 right-8 text-4xl font-black text-accent/5 transition-colors group-hover:text-accent/10">
+            <div className="absolute top-8 right-8 text-4xl font-black text-white/5 transition-colors group-hover:text-white/10">
               0{i + 1}
             </div>
 
-            <h3 className="mb-3 text-xl font-bold text-ink">{titulo}</h3>
-            <p className="text-sm leading-relaxed text-muted">
+            <h3 className="mb-3 text-xl font-bold text-white">{titulo}</h3>
+            <p className="text-sm leading-relaxed text-slate-400">
               {descripcion}
             </p>
           </div>
@@ -102,6 +102,7 @@ function SeccionComoFunciona() {
     </section>
   )
 }
+
 
 export default SeccionComoFunciona
 

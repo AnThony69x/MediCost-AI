@@ -17,14 +17,15 @@ function LayoutPrincipal({
   const isApp = variant === 'app'
 
   return (
-    <div className="relative flex min-h-screen flex-col overflow-x-hidden selection:bg-accent/10 selection:text-accent">
+    <div className="relative flex min-h-screen flex-col overflow-x-hidden selection:bg-primary/20 selection:text-primary">
       <SmoothScroll />
       
-      {/* Dynamic Background */}
-      <div className="fixed inset-0 -z-10 bg-[#F8FAFC]">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-accent/5 blur-[120px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-accent/5 blur-[120px]" />
+      {/* Dynamic Vibrant Background - Optimized */}
+      <div className="fixed inset-0 -z-10 bg-[#020617] overflow-hidden">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary/5 blur-[120px] will-change-transform animate-pulse" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-accent/5 blur-[120px] will-change-transform animate-pulse [animation-delay:2s]" />
       </div>
+
 
       {isApp ? null : <Navbar />}
       
@@ -44,6 +45,7 @@ function LayoutPrincipal({
     </div>
   )
 }
+
 
 export default LayoutPrincipal
 

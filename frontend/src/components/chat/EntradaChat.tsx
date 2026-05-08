@@ -21,10 +21,10 @@ function EntradaChat({
   }
 
   return (
-    <div className="flex items-end gap-3 rounded-3xl border border-border bg-white/50 px-4 py-3 shadow-soft backdrop-blur-xl transition-all duration-300 focus-within:border-accent/30 focus-within:bg-white focus-within:shadow-medium">
+    <div className="flex items-end gap-3 rounded-3xl border border-slate-800 bg-slate-900/50 px-4 py-3 backdrop-blur-xl transition-all duration-300 focus-within:border-primary/50 focus-within:bg-slate-900 focus-within:shadow-[0_0_20px_rgba(37,99,235,0.1)]">
       <textarea
         rows={1}
-        className="min-h-[44px] flex-1 resize-none bg-transparent py-2.5 text-sm leading-relaxed text-ink outline-none placeholder:text-muted/60"
+        className="min-h-[44px] flex-1 resize-none bg-transparent py-2.5 text-sm leading-relaxed text-white outline-none placeholder:text-slate-500"
         placeholder="Describe tus síntomas aquí..."
         value={texto}
         onChange={(event) => setTexto(event.target.value)}
@@ -50,6 +50,7 @@ function EntradaChat({
       </button>
     </div>
   )
+
 }
 
 export default EntradaChat

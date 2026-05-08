@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { HeartPulse } from 'lucide-react'
+import { Activity } from 'lucide-react'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { LANDING_SECTIONS } from '../../constants/landingSections'
@@ -8,55 +8,50 @@ import { useLandingSectionNav } from '../../hooks/useLandingSectionNav'
 
 function Navbar() {
   const irASeccion = useLandingSectionNav()
-  const headerRef = useRef<HTMLElement>(null)
+  const navRef = useRef<HTMLElement>(null)
 
   useGSAP(() => {
-    gsap.from(headerRef.current, {
-      y: -100,
-      opacity: 0,
-      duration: 1.2,
-      ease: 'power4.out',
-    })
+    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } })
     
-    gsap.from('.nav-link', {
-      opacity: 0,
-      y: -20,
-      stagger: 0.1,
-      duration: 0.8,
-      delay: 0.5,
-      ease: 'power3.out',
+    // Set initial state via GSAP to avoid CSS conflicts
+    gsap.set(navRef.current, { y: -30, autoAlpha: 0 })
+    gsap.set('.nav-item', { autoAlpha: 0 })
+
+    tl.to(navRef.current, {
+      y: 0,
+      autoAlpha: 1,
+      duration: 1,
     })
-  }, { scope: headerRef })
+    .to('.nav-item', {
+      autoAlpha: 1,
+      stagger: 0.1,
+      duration: 0.6,
+      clearProps: 'all'
+    }, '-=0.7')
+  }, { scope: navRef })
+
 
   return (
-    <header 
-      ref={headerRef}
-      className="fixed inset-x-0 top-6 z-50 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
-    >
-      <div className="glass-card flex items-center justify-between rounded-[2rem] px-6 py-4 shadow-strong">
-        <Link
-          to="/"
-          className="group flex items-center gap-3 transition-transform hover:scale-[1.02]"
-        >
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent text-white shadow-glow transition-transform group-hover:rotate-12">
-            <HeartPulse size={24} />
+    <header className="fixed top-0 left-0 right-0 z-50 px-6 py-4">
+      <nav
+        ref={navRef}
+        className="mx-auto flex max-w-6xl items-center justify-between rounded-full border border-white/5 bg-slate-950/40 px-6 py-3 backdrop-blur-xl shadow-2xl"
+      >
+        <Link to="/" className="nav-item flex items-center gap-2 group">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-white shadow-glow-primary transition-transform group-hover:rotate-12">
+            <Activity size={20} />
           </div>
-          <div className="hidden sm:block">
-            <p className="text-xl font-bold tracking-tight text-ink">
-              MediCost<span className="text-accent">AI</span>
-            </p>
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted">
-              Inteligencia Médica
-            </p>
-          </div>
+          <span className="text-xl font-bold tracking-tight text-white">
+            MediCost<span className="text-primary">AI</span>
+          </span>
         </Link>
 
-        <nav className="hidden items-center gap-1 md:flex">
+        <div className="hidden items-center gap-6 md:flex">
           {LANDING_SECTIONS.map(({ id, etiqueta }) => (
             <a
               key={id}
-              href={`/#${id}`}
-              className="nav-link rounded-full px-5 py-2 text-sm font-medium text-muted transition-all hover:bg-accent/5 hover:text-accent"
+              href={`#${id}`}
+              className="nav-item text-sm font-medium text-slate-400 transition-colors hover:text-white"
               onClick={(e) => {
                 e.preventDefault()
                 irASeccion(id)
@@ -65,20 +60,20 @@ function Navbar() {
               {etiqueta}
             </a>
           ))}
-        </nav>
+        </div>
 
         <div className="flex items-center gap-4">
           <Link
             to="/chat"
-            className="btn-primary py-2.5 text-sm"
+            className="nav-item btn-primary py-2 px-6 text-sm whitespace-nowrap"
           >
             Simular Copago
           </Link>
         </div>
-      </div>
+      </nav>
     </header>
   )
+
 }
 
 export default Navbar
-

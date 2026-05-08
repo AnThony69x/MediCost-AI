@@ -5,34 +5,40 @@ function TarjetaCopago({ respuesta }: Readonly<{ respuesta: RespuestaChat }>) {
   const cobertura = Math.round(respuesta.cobertura * 100)
 
   return (
-    <div className="surface-card overflow-hidden border-white/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(244,250,248,0.92))] p-4 shadow-[0_18px_36px_rgba(15,23,42,0.08)]">
-      <div className="flex items-center justify-between gap-3">
+    <div className="glass-card overflow-hidden border-slate-800 bg-slate-900/60 p-5 rounded-3xl">
+      <div className="flex items-center justify-between gap-3 mb-6">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-accent">
             Resumen económico
           </p>
-          <p className="mt-1 text-sm font-semibold text-ink">
+          <h4 className="mt-1 text-lg font-bold text-white">
             {respuesta.especialidad}
-          </p>
+          </h4>
         </div>
-        <span className="rounded-full bg-accentSoft px-3 py-1 text-xs font-semibold text-accent">
-          Cobertura {cobertura}%
-        </span>
+        <div className="flex flex-col items-end">
+          <span className="text-2xl font-black text-white">
+            {cobertura}%
+          </span>
+          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+            Cobertura
+          </span>
+        </div>
       </div>
-      <div className="mt-4 grid gap-3 text-sm text-muted">
-        <div className="flex items-center justify-between rounded-2xl bg-white/70 px-3 py-2">
-          <span>Especialidad recomendada</span>
-          <span className="font-semibold text-ink">
+      
+      <div className="space-y-3">
+        <div className="flex items-center justify-between rounded-2xl bg-slate-950/40 border border-white/5 px-4 py-3">
+          <span className="text-sm text-slate-400">Especialidad</span>
+          <span className="text-sm font-semibold text-white">
             {respuesta.especialidad}
           </span>
         </div>
-        <div className="flex items-center justify-between rounded-2xl bg-white/70 px-3 py-2">
-          <span>Cobertura de tu seguro</span>
-          <span className="font-semibold text-ink">{cobertura}%</span>
+        <div className="flex items-center justify-between rounded-2xl bg-slate-950/40 border border-white/5 px-4 py-3">
+          <span className="text-sm text-slate-400">Tu seguro cubre</span>
+          <span className="text-sm font-semibold text-white">{cobertura}%</span>
         </div>
-        <div className="flex items-center justify-between rounded-2xl bg-white/70 px-3 py-2">
-          <span>Copago estimado</span>
-          <span className="text-base font-semibold text-ink">
+        <div className="flex items-center justify-between rounded-2xl bg-primary/10 border border-primary/20 px-4 py-4 mt-2">
+          <span className="text-sm font-bold text-primary">Copago estimado</span>
+          <span className="text-xl font-black text-white">
             {formatearMoneda(respuesta.copago)}
           </span>
         </div>
@@ -40,5 +46,6 @@ function TarjetaCopago({ respuesta }: Readonly<{ respuesta: RespuestaChat }>) {
     </div>
   )
 }
+
 
 export default TarjetaCopago
