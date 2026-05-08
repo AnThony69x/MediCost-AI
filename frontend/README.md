@@ -16,6 +16,7 @@ Permite al usuario:
 ---
 
 ## 🛠️ Tecnologías
+
 - React
 - Vite
 - TypeScript
@@ -135,8 +136,3 @@ npm run preview
 ## 📌 Conclusión
 
 El frontend de MediCost-AI proporciona una experiencia simple e intuitiva para que el usuario pueda entender su cobertura médica y costos antes de acudir a un hospital, integrando una interfaz moderna con un sistema inteligente de backend.
-
----
-
-Si quieres, puedo agregar ahora el código base del chat (React + llamada al API) listo para copiar.
-
