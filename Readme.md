@@ -37,21 +37,21 @@ El sistema reduce la incertidumbre económica del paciente y mejora la toma de d
 
 ## 🏗️ Arquitectura
 
-Frontend (Next.js)
+Frontend (React + Vite)
   ↓
-Supabase (DB + Auth + API)
+Backend (FastAPI)
   ↓
-FastAPI (lógica + IA)
+Supabase (Base de datos)
   ↓
-Modelo IA (Gemini)
+IA (Google Gemini)
 
 ## 🛠️ Tecnologías
 
 **Frontend**
 
-- Next.js
+- React
+- Vite
 - TypeScript
-- TailwindCSS
 
 **Backend-as-a-Service**
 
@@ -63,12 +63,7 @@ Modelo IA (Gemini)
 
 **Inteligencia Artificial**
 
-- Google Gemini
-
-**Infraestructura**
-
-- Vercel
-- Railway
+- Google Gemini (vía `GEMINI_KEY`)
 
 ## 📂 Estructura del Proyecto
 
@@ -87,7 +82,7 @@ medicost-ai/
 1. Clonar repositorio
 
 ```bash
-git clone https://github.com/tu-usuario/medicost-ai.git
+git clone https://github.com/AnThony69x/MediCost-AI.git
 cd medicost-ai
 ```
 
@@ -119,13 +114,14 @@ http://localhost:3000
 
 Configurar un proyecto en Supabase y crear las tablas necesarias (o importar desde `database/` si hay migraciones/SQL):
 
-- users
-- plans
-- specialties
-- services
-- hospitals
-- coverage_rules
-- chat_history
+- usuarios
+- planes
+- especialidades
+- servicios
+- hospitales
+- reglas_cobertura
+- servicios_hospital
+- historial_chat
 
 ## 🧮 Lógica de negocio
 
@@ -157,14 +153,14 @@ Request
 Response
 ```json
 {
-  "specialty": "Cardiología",
-  "coverage": 0.8,
-  "copay": 16,
-  "hospitals": [
-    {"name": "Hospital A", "copay": 16},
-    {"name": "Hospital B", "copay": 14}
+  "especialidad": "Cardiología",
+  "cobertura": 0.8,
+  "copago": 16,
+  "hospitales": [
+    {"nombre": "Hospital A", "copago": 16},
+    {"nombre": "Hospital B", "copago": 14}
   ],
-  "recommendation": "Hospital B"
+  "recomendacion": "Hospital B"
 }
 ```
 
@@ -181,9 +177,8 @@ Incluye:
 ## 📈 Futuras mejoras
 
 - Integración con aseguradoras reales
-- Predicción de enfermedades
 - Recomendación de exámenes médicos
-- Dashboard analítico con Power BI
+- Dashboard analítico
 - Asistente por voz
 
 ## 👨‍💻 Autores

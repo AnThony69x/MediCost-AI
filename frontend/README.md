@@ -1,73 +1,138 @@
-# React + TypeScript + Vite
+# 🎨 Frontend - MediCost-AI
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 📌 Descripción
 
-Currently, two official plugins are available:
+El frontend de **MediCost-AI** es la interfaz web donde el usuario interactúa con el sistema mediante un chat inteligente.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Permite al usuario:
 
-## React Compiler
+- Ingresar síntomas en lenguaje natural
+- Recibir una especialidad médica recomendada
+- Consultar la cobertura de su seguro
+- Visualizar el copago estimado
+- Comparar hospitales disponibles
+- Obtener una recomendación final
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 🛠️ Tecnologías
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- React
+- Vite
+- TypeScript
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 📂 Estructura del proyecto
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+frontend/
+├── src/
+│   ├── components/ # Componentes reutilizables
+│   │   ├── Chat/
+│   │   ├── Results/
+│   │   └── UI/
+│   ├── services/   # Conexión con APIs
+│   ├── hooks/      # Custom hooks
+│   ├── types/      # Tipos TypeScript
+│   └── utils/      # Funciones auxiliares
+└── index.html
+
+---
+
+## ⚙️ Instalación y ejecución
+
+1. Instalar dependencias:
+
+```bash
+cd frontend
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+2. Ejecutar en desarrollo:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev
 ```
+
+3. Abrir en el navegador:
+
+http://localhost:3000
+
+---
+
+## 🔌 Integración con Backend
+
+El frontend se comunica con el backend mediante el endpoint `POST /chat`.
+
+Ejemplo de request:
+
+```json
+{
+  "user_id": 1,
+  "message": "dolor en el pecho"
+}
+```
+
+---
+
+## 🧠 Funcionalidades principales
+
+- Interfaz tipo chat
+- Envío de mensajes al backend
+- Renderizado de respuestas
+- Visualización de resultados (copago, hospitales, recomendación)
+- Manejo de estado de conversación
+
+---
+
+## 🎯 Flujo de uso
+
+Usuario escribe síntoma
+	↓
+Se envía al backend
+	↓
+Se recibe respuesta
+	↓
+Se muestra:
+  - Especialidad
+  - Copago
+  - Hospitales
+  - Recomendación
+
+---
+
+## 🚀 Mejoras futuras
+
+- Diseño UI/UX más avanzado
+- Soporte para voz (speech-to-text)
+- Animaciones e interacción mejorada
+- Historial de conversaciones
+- Modo oscuro
+
+---
+
+## 🧪 Notas
+
+- El frontend depende del backend para la lógica de negocio.
+- Mantener la URL del API en variables de entorno.
+
+Ejemplo `.env.local`:
+
+```
+VITE_API_URL=http://localhost:8000
+```
+
+---
+
+## 📦 Build para producción
+
+```bash
+npm run build
+npm run preview
+```
+
+---
+
+## 📌 Conclusión
+
+El frontend de MediCost-AI proporciona una experiencia simple e intuitiva para que el usuario pueda entender su cobertura médica y costos antes de acudir a un hospital, integrando una interfaz moderna con un sistema inteligente de backend.

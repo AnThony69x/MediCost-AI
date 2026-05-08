@@ -1,11 +1,6 @@
-MediCost-AI
-====================
-
-Nombre del Proyecto
---------------------
 MediCost-AI — Agente Inteligente para Estimación de Copagos y Cobertura Médica
 
-Objetivo General
+🎯 Objetivo General
 -----------------
 Desarrollar una aplicación web inteligente que permita a los pacientes conocer, antes de acudir a un centro de salud:
 
@@ -14,7 +9,7 @@ Desarrollar una aplicación web inteligente que permita a los pacientes conocer,
 - El costo estimado del copago
 - El hospital más conveniente dentro de la red
 
-Problema
+❗ Problema
 --------
 Actualmente, los pacientes enfrentan:
 
@@ -29,7 +24,7 @@ Esto genera:
 - Mala experiencia del usuario
 - Uso ineficiente de recursos médicos
 
-Solución
+💡 Solución
 --------
 MediCost-AI propone un agente conversacional que:
 
@@ -40,35 +35,35 @@ MediCost-AI propone un agente conversacional que:
 - Compara hospitales disponibles
 - Recomienda la mejor opción económica
 
-Flujo del Sistema (resumen)
+🔄 Flujo del Sistema
 ---------------------------
 Usuario ingresa síntoma
 	↓
-Frontend (Next.js)
+Frontend (React + Vite)
 	↓
 Backend (FastAPI)
 	↓
-IA (clasificación de síntomas)
+Clasificación de especialidad (reglas o IA)
 	↓
-Consulta Supabase (datos)
+Consulta a Supabase
 	↓
 Cálculo de copago
 	↓
-Ranking de hospitales
+Comparación de hospitales
 	↓
 Respuesta al usuario
 
-Arquitectura del Sistema
+🏗️ Arquitectura del Sistema
 ------------------------
-Frontend (Next.js)
+Frontend (React + Vite)
 	↓
-Supabase (DB + Auth + API)
+Backend (FastAPI)
 	↓
-FastAPI (lógica + IA)
+Supabase (Base de datos)
 	↓
-Modelo IA (Gemini u otro LLM)
+IA (Google Gemini)
 
-Componentes
+🧩 Componentes del Sistema
 -----------
 
 Frontend
@@ -95,13 +90,13 @@ Agente de IA
 Se usa para:
 
 - Interpretar síntomas del usuario
-- Clasificar la especialidad médica
+- Clasificar especialidades
 
 Ejemplo:
 Input: "dolor en el pecho"
 Output: Cardiología
 
-Lógica de Cálculo
+🧠 Lógica de Cálculo
 -----------------
 Fórmula
 
@@ -113,7 +108,7 @@ Cobertura: 80%
 
 Copago: $16
 
-Comparación de Hospitales
+🏥 Comparación de Hospitales
 ------------------------
 Proceso:
 
@@ -127,25 +122,26 @@ Hospital A → $16
 Hospital B → $14 ✅
 Hospital C → $19
 
-Modelo de Datos (en Supabase)
+🗃️ Modelo de Datos (Supabase)
 ----------------------------
 Tablas principales:
 
-- users
-- plans
-- specialties
-- services
-- hospitals
-- coverage_rules
-- chat_history
+- usuarios
+- planes
+- especialidades
+- servicios
+- hospitales
+- reglas_cobertura
+- servicios_hospital
+- historial_chat
 
 Tecnologías
 -----------
 Frontend
 
-- Next.js
+- React
+- Vite
 - TypeScript
-- TailwindCSS
 
 Backend-as-a-Service
 
@@ -157,25 +153,47 @@ Backend (lógica)
 
 Inteligencia Artificial
 
-- Google Gemini (u otro LLM)
-
-Infraestructura
-
-- Vercel
-- Railway
-
-Alcance (MVP)
+ - Google Gemini (GEMINI_KEY)
+🧪 Alcance (MVP)
 ----------------
 El sistema incluirá:
 
 ✔ Chat básico funcional
-✔ Clasificación simple de síntomas (reglas → luego IA)
+✔ Clasificación básica de síntomas (sin IA al inicio)
 ✔ Consulta de datos desde Supabase
 ✔ Cálculo de copagos
 ✔ Comparación de hospitales
 ✔ Recomendación automática
 
-Fases de Desarrollo
+👥 Roles del Equipo
+👤 Anthony — Base de Datos
+Diseño de tablas
+
+Creación de schema.sql
+
+Datos de prueba (seed.sql)
+
+Relaciones y consultas
+
+👤 William — Backend
+Desarrollo en FastAPI
+
+Endpoint /chat
+
+Lógica de negocio
+
+Integración con Supabase
+
+👤 Luis — Frontend
+Interfaz en React + Vite
+
+Chat UI
+
+Consumo de API
+
+Visualización de resultados
+
+🚀 Fases de Desarrollo
 -------------------
 Fase 1 (MVP)
 - Reglas simples (sin IA)
@@ -183,35 +201,40 @@ Fase 1 (MVP)
 - Funcionalidad básica
 
 Fase 2
-- Integración con IA (Gemini)
+- Integración con IA (Google Gemini)
 - Mejora en clasificación
 
 Fase 3
+- Mejoras UI
 - Optimización
-- UI avanzada
-- Analítica
+- Testing
 
-Futuras mejoras
+🔮 Futuras Mejoras
 ---------------
 - Integración con aseguradoras reales
-- Predicción de enfermedades
 - Recomendación de exámenes
-- Dashboard analítico con Power BI
+- Dashboard analítico
 - Asistente por voz
 
-Impacto Esperado
+🌍 Impacto Esperado
 ----------------
 - Reducción de incertidumbre en costos médicos
 - Mejora en la experiencia del paciente
-- Optimización en la toma de decisiones
-- Digitalización del proceso de pre-atención
+- Mejores decisiones de atención
+- Optimización del uso de servicios de salud
 
-Conclusión
+🏁 Conclusión
 ----------
-MediCost-AI integra inteligencia artificial, datos y lógica de negocio en una sola plataforma para ofrecer al paciente una estimación clara, rápida y confiable de su atención médica antes de acudir al hospital, reduciendo costos inesperados y mejorando la eficiencia del sistema de salud.
+MediCost-AI integra datos, lógica de negocio y (opcionalmente) inteligencia artificial para ofrecer al paciente una estimación clara, rápida y confiable de su atención médica antes de acudir al hospital.
 
-Notas finales
+📝 Notas Finales
 -----------
-Documentar reglas en `coverage_rules` y mantener datos de ejemplo en `database/` para facilitar pruebas y despliegue local.
+Todo el sistema debe manejarse en español (tablas, datos y lógica)
+
+Mantener datos de prueba en /database
+
+Documentar reglas en reglas_cobertura
+
+Validar siempre los cálculos antes de integrar frontend
 
 
