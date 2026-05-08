@@ -1,22 +1,21 @@
 """
-Agente médico de MediCost-AI.
-
-Clasifica el síntoma del usuario en una especialidad médica.
-Estrategia en cascada:
-  1. Google Gemini (si GEMINI_KEY está configurado)
-  2. Clasificación por palabras clave (fallback local)
-  3. 'Medicina General' (fallback último recurso)
+Agente médico de MediCost-AI usando Groq.
+Clasifica síntomas y detecta intención médica con alta velocidad y contexto.
 """
 
 import logging
 from typing import Optional
 
-import google.generativeai as genai
+from groq import Groq
 
 from app.core.config import settings
 from app.utils.exceptions import AIClassificationException
 
 logger = logging.getLogger(__name__)
+
+
+def _get_groq_client():
+    return Groq(api_key=settings.GROQ_API_KEY)
 
 # ---------------------------------------------------------------------------
 # Diccionario de palabras clave por especialidad
@@ -122,111 +121,94 @@ def _looks_medical_by_rules(message: str) -> bool:
     return _rule_based_classify(message) is not None
 
 
-def detect_medical_intent(message: str) -> bool:
+def _format_history_for_prompt(history: list[dict]) -> str:
+    """Formatea el historial para incluirlo en los prompts de Gemini."""
+    if not history:
+        return "Sin historial previo."
+    
+    turns = []
+    for turn in history[-5:]: # Tomar los últimos 5 turnos para contexto
+        role = "Usuario" if turn.get("role") == "user" else "Asistente"
+        content = turn.get("content", "")
+        turns.append(f"{role}: {content}")
+    return "\n".join(turns)
+
+def detect_medical_intent(message: str, history: list[dict] = None) -> bool:
     """
-    Detecta si el mensaje debe pasar por el flujo médico o si es una charla normal.
-
-    Usa Gemini como primer intento cuando está disponible y cae a reglas locales.
+    Detecta si el mensaje tiene intención médica usando Groq.
     """
-    if settings.GEMINI_KEY:
-        prompt = f"""Eres un filtro de intención.
-Responde únicamente YES o NO.
+    history = history or []
+    
+    if settings.GROQ_API_KEY:
+        context = _format_history_for_prompt(history)
+        prompt = f"""Eres un experto en detección de intención médica.
+Decide si el último mensaje requiere activar el flujo de costos médicos.
 
-YES = el usuario habla de síntomas, dolor, malestar, fiebre, mareo, tos, lesión o una molestia física.
-NO = saludo, agradecimiento, conversación general, duda administrativa o mensaje sin síntomas.
+CONTEXTO PREVIO:
+{context}
 
-Mensaje: {message!r}
+ÚLTIMO MENSAJE:
+{message!r}
+
+Responde ÚNICAMENTE "YES" o "NO".
 """
 
         try:
-            genai.configure(api_key=settings.GEMINI_KEY)
-            model = genai.GenerativeModel(settings.GEMINI_MODEL)
-            response = model.generate_content(prompt)
-            raw = (response.text or "").strip().upper()
-            if raw.startswith("YES"):
+            client = _get_groq_client()
+            completion = client.chat.completions.create(
+                model=settings.GROQ_MODEL,
+                messages=[{"role": "user", "content": prompt}],
+                temperature=0.1,
+            )
+            raw = (completion.choices[0].message.content or "").strip().upper()
+            if "YES" in raw:
                 return True
-            if raw.startswith("NO"):
+            if "NO" in raw:
                 return False
-        except Exception as exc:  # noqa: BLE001
-            logger.warning("No se pudo detectar intención médica con Gemini: %s", exc)
+        except Exception as exc:
+            logger.warning("Fallo en detección de intención con Groq: %s", exc)
 
     return _looks_medical_by_rules(message)
 
 
-# ---------------------------------------------------------------------------
-# Clasificación con Google Gemini
-# ---------------------------------------------------------------------------
-def _gemini_classify(message: str) -> str:
+def classify_symptom(message: str, history: list[dict] = None) -> str:
     """
-    Usa Google Gemini para clasificar el síntoma.
-
-    Returns:
-        Nombre de la especialidad según Gemini.
-
-    Raises:
-        AIClassificationException: Si Gemini falla o devuelve respuesta inválida.
+    Clasifica el síntoma en una especialidad usando Groq.
     """
+    history = history or []
     specialties = list(SPECIALTY_KEYWORDS.keys())
-    prompt = _GEMINI_PROMPT.format(
-        specialties=", ".join(specialties),
-        message=message,
-    )
+    
+    if settings.GROQ_API_KEY:
+        context = _format_history_for_prompt(history)
+        prompt = f"""Clasificador médico inteligente.
+Determina la especialidad adecuada.
 
-    try:
-        genai.configure(api_key=settings.GEMINI_KEY)
-        model = genai.GenerativeModel(settings.GEMINI_MODEL)
-        response = model.generate_content(prompt)
-        raw = response.text.strip()
-    except Exception as exc:
-        raise AIClassificationException(str(exc)) from exc
+ESPECIALIDADES DISPONIBLES:
+{", ".join(specialties)}
 
-    # Validar que la respuesta sea una especialidad conocida
-    for specialty in specialties:
-        if specialty.lower() in raw.lower():
-            logger.info("Gemini clasificó '%s' → '%s'", message, specialty)
-            return specialty
+CONTEXTO PREVIO:
+{context}
 
-    logger.warning(
-        "Gemini devolvió respuesta no válida '%s' para '%s'. Usando reglas.",
-        raw,
-        message,
-    )
-    raise AIClassificationException(f"Respuesta inesperada de Gemini: '{raw}'")
+ÚLTIMO MENSAJE:
+"{message}"
 
-
-# ---------------------------------------------------------------------------
-# Función pública principal
-# ---------------------------------------------------------------------------
-def classify_symptom(message: str) -> str:
-    """
-    Clasifica el síntoma del usuario en una especialidad médica.
-
-    Estrategia en cascada:
-    1. Google Gemini  → si GEMINI_KEY está configurado
-    2. Reglas locales → si Gemini falla o no está configurado
-    3. 'Medicina General' → fallback último recurso
-
-    Args:
-        message: Texto con los síntomas del usuario.
-
-    Returns:
-        Nombre de la especialidad médica (str).
-    """
-    # --- Paso 1: intentar con Gemini ---
-    if settings.GEMINI_KEY:
+Responde ÚNICAMENTE con el nombre de la especialidad.
+"""
         try:
-            return _gemini_classify(message)
-        except AIClassificationException as exc:
-            logger.warning("Gemini falló, usando reglas: %s", exc.message)
+            client = _get_groq_client()
+            completion = client.chat.completions.create(
+                model=settings.GROQ_MODEL,
+                messages=[{"role": "user", "content": prompt}],
+                temperature=0.1,
+            )
+            raw = (completion.choices[0].message.content or "").strip()
+            
+            for specialty in specialties:
+                if specialty.lower() in raw.lower():
+                    return specialty
+        except Exception as exc:
+            logger.warning("Fallo en clasificación con Groq: %s", exc)
 
-    # --- Paso 2: clasificación por reglas ---
+    # Fallback a reglas y Medicina General
     result = _rule_based_classify(message)
-    if result:
-        logger.info("Reglas clasificaron '%s' → '%s'", message, result)
-        return result
-
-    # --- Paso 3: fallback ---
-    logger.warning(
-        "Sin clasificación para '%s'. Asignando 'Medicina General'.", message
-    )
-    return "Medicina General"
+    return result if result else "Medicina General"

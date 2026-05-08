@@ -1,75 +1,69 @@
 """
-Generación de texto natural para el chat médico.
-
-Si Gemini está disponible, usa una reformulación breve y humana.
-Si no, construye una respuesta clara con pequeñas variaciones para evitar
-que el texto suene rígido o repetitivo.
+Generación de texto natural para el chat médico usando Groq.
+Produce respuestas dinámicas, humanas y contextuales.
 """
 
 from __future__ import annotations
 
 import logging
-import random
-from typing import Iterable
-
-import google.generativeai as genai
+from groq import Groq
 
 from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
+
+def _get_groq_client():
+    return Groq(api_key=settings.GROQ_API_KEY)
+
 _NATURAL_PROMPT = """\
-Eres un asistente de salud en español. Escribe una respuesta corta, cálida y
-natural para un paciente. Habla en primera persona y evita sonar robótico.
+Eres MediCost-AI, un asistente de salud empático y experto. Tu objetivo es informar al paciente de forma clara, humana y personalizada.
+Habla como un profesional médico que conoce el historial del paciente y lo orienta con cuidado.
 
-Usa estos datos para redactar el mensaje:
-- Síntoma descrito: {message}
-- Especialidad sugerida: {specialty}
-- Servicio asociado: {service}
-- Cobertura del plan: {coverage_pct}%
-- Plan: {plan_name}
-- Hospital recomendado: {hospital_name}
-- Ubicación: {location}
-- Copago estimado: ${copay:.2f}
+DATOS DEL PACIENTE:
+- Género: {genero}
+- Perfil: {perfil}
+- Antecedentes: {antecedentes}
 
-Requisitos:
-- Máximo 3 oraciones.
-- No uses listas ni viñetas.
-- No expliques el proceso interno.
-- Mantén un tono empático y natural.
-- Cierra ofreciendo ayuda si el usuario desea revisar otro síntoma.
-"""
-
-_CONVERSATION_PROMPT = """\
-Eres un asistente conversacional cálido y natural en español.
-Responde como una persona real, sin sonar robótico ni usar plantillas fijas.
-
-Contexto reciente:
+CONTEXTO DE LA CHARLA:
 {history}
 
-Último mensaje del usuario:
-{message}
+DATOS TÉCNICOS PARA INTEGRAR:
+- Síntoma actual: {message}
+- Especialidad sugerida: {specialty}
+- Plan del usuario: {plan_name}
+- Cobertura aplicable: {coverage_pct}%
+- Hospital recomendado: {hospital_name} en {location}
+- Copago estimado: ${copay:.2f}
 
-Reglas:
-- Responde en 1 a 3 frases.
-- Si el usuario saluda, saluda de vuelta.
-- Si agradece, responde con amabilidad.
-- Si pide ayuda general, ofrece ayuda con un tono humano.
-- No menciones que eres un modelo ni que estás usando reglas.
-- No uses listas, viñetas ni títulos.
+REGLAS DE ORO:
+1. Usa los datos del paciente (edad/género) para adaptar tu lenguaje y nivel de empatía.
+2. Si tiene antecedentes relevantes, relaciónalos brevemente si tiene sentido médico.
+3. No uses listas. Escribe 2 a 3 oraciones fluidas y humanas.
+4. Cierra ofreciendo ayuda adicional de forma cálida.
 """
 
-_OPENERS = [
-    "Con lo que me cuentas, la orientación más adecuada es",
-    "Por los síntomas que describes, te recomendaría",
-    "Si tomo en cuenta lo que comentas, lo más conveniente es",
-]
 
-_CLOSINGS = [
-    "Si quieres, también puedo ayudarte a revisar otro síntoma.",
-    "Si te parece, seguimos con otro síntoma o duda que tengas.",
-    "Si necesitas, puedo orientarte con otro caso similar.",
-]
+_CONVERSATION_PROMPT = """\
+Eres MediCost-AI, un asistente de salud digital de vanguardia. Tu personalidad es profesional, cercana, intuitiva y profundamente humana. No eres solo un procesador de datos, eres un guía.
+
+TU ESTILO:
+- Habla de tú a tú, con calidez pero manteniendo el respeto.
+- Usa un lenguaje fluido y natural. Evita frases cortadas o que parezcan sacadas de un manual.
+- Si el usuario te cuenta algo personal o su estado de ánimo, reconócelo antes de pasar a la información técnica.
+
+CONTEXTO DE LA CONVERSACIÓN:
+{history}
+
+MENSAJE ACTUAL:
+{message}
+
+REGLAS DE ORO:
+1. Mantén la coherencia con lo que se ha dicho antes. Si el usuario ya se presentó o ya mencionó un dolor, no lo ignores.
+2. Sé breve pero sustancial (máximo 3 oraciones).
+3. Si el mensaje NO es médico (ej: un saludo o un agradecimiento), responde con gracia y deja la puerta abierta para ayudar con síntomas.
+4. NUNCA menciones que eres una IA, un bot o un algoritmo. Eres simplemente MediCost-AI.
+"""
 
 
 def _format_history(history: Iterable[dict[str, str]]) -> str:
@@ -84,28 +78,6 @@ def _format_history(history: Iterable[dict[str, str]]) -> str:
     return "\n".join(turns[-8:]) if turns else "Sin contexto previo relevante."
 
 
-def _build_fallback_message(
-    *,
-    message: str,
-    specialty: str,
-    service: str,
-    coverage_pct: int,
-    plan_name: str,
-    hospital_name: str,
-    location: str,
-    copay: float,
-) -> str:
-    opener = random.choice(_OPENERS)
-    closing = random.choice(_CLOSINGS)
-
-    return (
-        f"{opener} {specialty}. "
-        f"Con tu plan {plan_name}, la cobertura para {service} ronda el {coverage_pct}%. "
-        f"La opción más conveniente que encontré es {hospital_name} ({location}), "
-        f"con un copago estimado de ${copay:.2f}. {closing}"
-    )
-
-
 def build_natural_response(
     *,
     message: str,
@@ -116,41 +88,55 @@ def build_natural_response(
     hospital_name: str,
     location: str,
     copay: float,
+    history: Iterable[dict[str, str]] | None = None,
+    user_profile: dict | None = None,
 ) -> str:
     """
-    Devuelve un texto natural para mostrar al usuario.
+    Genera una respuesta 100% dinámica usando Groq.
     """
-    if settings.GEMINI_KEY:
-        try:
-            genai.configure(api_key=settings.GEMINI_KEY)
-            model = genai.GenerativeModel(settings.GEMINI_MODEL)
-            prompt = _NATURAL_PROMPT.format(
-                message=message,
-                specialty=specialty,
-                service=service,
-                coverage_pct=coverage_pct,
-                plan_name=plan_name,
-                hospital_name=hospital_name,
-                location=location,
-                copay=copay,
-            )
-            response = model.generate_content(prompt)
-            text = (response.text or "").strip()
-            if text:
-                return text
-        except Exception as exc:  # noqa: BLE001
-            logger.warning("No se pudo generar respuesta natural con Gemini: %s", exc)
+    history = history or []
+    user_profile = user_profile or {}
+    
+    perfil = "Paciente"
+    if user_profile.get("fecha_nacimiento"):
+        from datetime import date
+        dob = user_profile["fecha_nacimiento"]
+        if isinstance(dob, str):
+            dob = date.fromisoformat(dob)
+        age = (date.today() - dob).days // 365
+        perfil = f"Paciente de {age} años"
 
-    return _build_fallback_message(
-        message=message,
-        specialty=specialty,
-        service=service,
-        coverage_pct=coverage_pct,
-        plan_name=plan_name,
-        hospital_name=hospital_name,
-        location=location,
-        copay=copay,
-    )
+    try:
+        client = _get_groq_client()
+        prompt = _NATURAL_PROMPT.format(
+            genero=user_profile.get("genero", "No especificado"),
+            perfil=perfil,
+            antecedentes=", ".join(user_profile.get("antecedentes", [])) or "Ninguno conocido",
+            history=_format_history(history),
+            message=message,
+            specialty=specialty,
+            service=service,
+            coverage_pct=coverage_pct,
+            plan_name=plan_name,
+            hospital_name=hospital_name,
+            location=location,
+            copay=copay,
+        )
+        
+        completion = client.chat.completions.create(
+            model=settings.GROQ_MODEL,
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.7,
+            max_tokens=500,
+        )
+        text = (completion.choices[0].message.content or "").strip()
+        if text:
+            return text
+    except Exception as exc:
+        logger.error("Fallo crítico en Groq build_natural_response: %s", exc)
+        raise
+
+    raise RuntimeError("Groq no devolvió una respuesta válida.")
 
 
 def build_conversational_response(
@@ -158,58 +144,26 @@ def build_conversational_response(
     message: str,
     history: Iterable[dict[str, str]] | None = None,
 ) -> str:
-    """Genera una respuesta natural para mensajes que no son síntomas."""
+    """Genera una respuesta conversacional usando Groq."""
     history = history or []
-
-    if settings.GEMINI_KEY:
-        try:
-            genai.configure(api_key=settings.GEMINI_KEY)
-            model = genai.GenerativeModel(settings.GEMINI_MODEL)
-            prompt = _CONVERSATION_PROMPT.format(
-                history=_format_history(history),
-                message=message,
-            )
-            response = model.generate_content(prompt)
-            text = (response.text or "").strip()
-            if text:
-                return text
-        except Exception as exc:  # noqa: BLE001
-            logger.warning(
-                "No se pudo generar respuesta conversacional con Gemini: %s", exc
-            )
-
-    lower = message.strip().lower()
-    if any(token in lower for token in ["hola", "buenas", "holi", "hello"]):
-        return random.choice(
-            [
-                "Hola, claro, te acompaño. Cuéntame qué necesitas y lo vemos juntos.",
-                "Hola, aquí estoy. Dime qué te preocupa y te ayudo paso a paso.",
-                "Hola, encantado de ayudarte. Cuéntame un poco más y seguimos.",
-            ]
+    try:
+        client = _get_groq_client()
+        prompt = _CONVERSATION_PROMPT.format(
+            history=_format_history(history),
+            message=message,
         )
-
-    if any(token in lower for token in ["gracias", "muchas gracias", "te lo agradezco"]):
-        return random.choice(
-            [
-                "Con gusto, para eso estoy. Si necesitas algo más, aquí sigo.",
-                "No hay de qué, sigo atento por si quieres revisar otra cosa.",
-                "Con gusto, si te surge otra duda, la vemos enseguida.",
-            ]
+        
+        completion = client.chat.completions.create(
+            model=settings.GROQ_MODEL,
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.8,
+            max_tokens=400,
         )
+        text = (completion.choices[0].message.content or "").strip()
+        if text:
+            return text
+    except Exception as exc:
+        logger.error("Fallo crítico en Groq build_conversational_response: %s", exc)
+        raise
 
-    if any(token in lower for token in ["adios", "bye", "hasta luego", "nos vemos"]):
-        return random.choice(
-            [
-                "Claro, hablamos luego. Cuídate mucho.",
-                "Perfecto, aquí estaré cuando vuelvas. Que estés bien.",
-                "De acuerdo, hasta luego. Si necesitas algo más, aquí sigo.",
-            ]
-        )
-
-    return random.choice(
-        [
-            "Te sigo leyendo. Cuéntame un poco más para orientarte mejor.",
-            "Entiendo, dime un poco más y te acompaño con calma.",
-            "Cuéntame más contexto y te respondo de la forma más útil posible.",
-        ]
-    )
+    raise RuntimeError("Groq no devolvió una respuesta válida.")

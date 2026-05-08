@@ -31,7 +31,12 @@ class ChatRequest(BaseModel):
         description="Mensaje del usuario describiendo sus síntomas.",
         examples=["Tengo dolor en el pecho"],
     )
+    session_id: Optional[UUID] = Field(
+        default=None,
+        description="ID de la sesión de chat para agrupar mensajes.",
+    )
     history: List[ConversationTurn] = Field(
+
         default_factory=list,
         description="Historial reciente de la conversación para dar contexto.",
     )

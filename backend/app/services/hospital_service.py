@@ -24,65 +24,38 @@ def get_ranked_hospitals(
     service_name: str,
 ) -> List[HospitalCost]:
     """
-    Obtiene la lista de hospitales en red que ofrecen el servicio dado,
-    calcula el copago en cada uno y los ordena de menor a mayor copago.
-
-    Args:
-        client:       Cliente Supabase.
-        service_id:   UUID del servicio médico.
-        coverage:     Cobertura del plan para ese servicio (0.0 - 1.0).
-        service_name: Nombre del servicio (para mensajes de error/log).
-
-    Returns:
-        Lista de HospitalCost ordenada por copago ascendente.
-
-    Raises:
-        NoHospitalsAvailableException: Si no hay hospitales en red disponibles.
+    Obtiene la lista de hospitales en red usando la función RPC de la DB.
     """
-    # Join: servicios_hospital → hospitales (solo en red)
-    resp = (
-        client.table("servicios_hospital")
-        .select("costo, hospitales(id, nombre, ubicacion, en_red)")
-        .eq("servicio_id", str(service_id))
-        .execute()
-    )
+    try:
+        resp = client.rpc(
+            "fn_get_ranked_hospitals",
+            {
+                "p_service_id": str(service_id),
+                "p_coverage": float(coverage)
+            }
+        ).execute()
 
-    # Filtrar hospitales en red (en_red = True) en Python
-    # (el filtro en columna de tabla relacionada no es directo en postgrest-py)
-    rows = [
-        row
-        for row in (resp.data or [])
-        if row.get("hospitales") and row["hospitales"]["en_red"] is True
-    ]
+        if not resp.data:
+            logger.warning("Sin hospitales en red para servicio='%s'", service_name)
+            raise NoHospitalsAvailableException(service_name)
 
-    if not rows:
-        logger.warning("Sin hospitales en red para servicio='%s'", service_name)
-        raise NoHospitalsAvailableException(service_name)
-
-    results: List[HospitalCost] = []
-    for row in rows:
-        h = row["hospitales"]
-        cost = Decimal(str(row["costo"]))
-        copay = calculate_copay(cost, coverage)
-
-        results.append(
+        results: List[HospitalCost] = [
             HospitalCost(
-                hospital_id=UUID(h["id"]),
-                hospital_name=h["nombre"],
-                location=h["ubicacion"],
-                in_network=h["en_red"],
-                cost=cost,
-                copay=copay,
+                hospital_id=UUID(row["hospital_id"]),
+                hospital_name=row["hospital_name"],
+                location=row["location"],
+                in_network=True,
+                cost=Decimal(str(row["cost"])),
+                copay=Decimal(str(row["copay"])),
             )
-        )
+            for row in resp.data
+        ]
 
-    # Ordenar por copago ascendente (menor copago = mejor opción)
-    sorted_results = sorted(results, key=lambda hc: hc.copay)
+        return results
 
-    logger.debug(
-        "Hospitales disponibles para '%s': %s",
-        service_name,
-        [(hc.hospital_name, float(hc.copay)) for hc in sorted_results],
-    )
+    except Exception as exc:
+        if isinstance(exc, NoHospitalsAvailableException):
+            raise
+        logger.error("Error al llamar a fn_get_ranked_hospitals: %s", exc)
+        raise MediCostException(500, "Error al calcular hospitales recomendados.") from exc
 
-    return sorted_results

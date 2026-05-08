@@ -11,15 +11,22 @@ from decimal import Decimal
 from uuid import UUID
 
 
+from datetime import date
+from typing import Optional, List
+
 @dataclass(frozen=True)
 class UserPlan:
-    """Datos del usuario junto con su plan de seguro."""
+    """Datos del usuario junto con su plan de seguro y perfil médico."""
 
     user_id: UUID
     user_name: str
     plan_id: UUID
     plan_name: str
-    plan_coverage: Decimal  # cobertura base del plan (0.0 – 1.0)
+    plan_coverage: Decimal
+    genero: Optional[str] = None
+    fecha_nacimiento: Optional[date] = None
+    antecedentes: List[str] = None
+
 
 
 @dataclass(frozen=True)

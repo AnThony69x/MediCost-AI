@@ -41,13 +41,14 @@ function EntradaChat({
         onClick={enviar}
         disabled={deshabilitado || !texto.trim()}
         className={`btn-primary flex items-center justify-center gap-2 transition-all disabled:opacity-30 disabled:scale-100 disabled:shadow-none ${
-          mostrarTextoEnviar ? 'px-6 py-2.5 text-sm' : 'h-11 w-11 shrink-0 p-0'
+          mostrarTextoEnviar ? 'px-4 sm:px-6 py-2.5 text-sm' : 'h-11 w-11 shrink-0 p-0'
         }`}
         aria-label="Enviar mensaje"
       >
-        <Send size={18} className={mostrarTextoEnviar ? '' : 'ml-0.5'} />
-        {mostrarTextoEnviar && <span>Enviar</span>}
+        <Send size={18} className={mostrarTextoEnviar ? 'shrink-0' : 'ml-0.5'} />
+        {mostrarTextoEnviar && <span className="hidden sm:inline">Enviar</span>}
       </button>
+
     </div>
   )
 

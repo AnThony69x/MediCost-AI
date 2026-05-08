@@ -17,7 +17,9 @@ function LayoutPrincipal({
   const isApp = variant === 'app'
 
   return (
-    <div className="relative flex min-h-screen flex-col overflow-x-hidden selection:bg-primary/20 selection:text-primary">
+    <div className={`relative flex flex-col overflow-x-hidden selection:bg-primary/20 selection:text-primary ${
+      isApp ? 'h-[100dvh] overflow-hidden' : 'min-h-screen'
+    }`}>
       <SmoothScroll />
       
       {/* Dynamic Vibrant Background - Optimized */}
@@ -32,7 +34,7 @@ function LayoutPrincipal({
       <main
         className={`relative z-10 flex min-h-0 flex-1 flex-col ${
           isApp
-            ? 'mx-auto w-full max-w-7xl px-4 pb-6 pt-5 sm:px-6 lg:px-8'
+            ? 'mx-auto w-full max-w-7xl h-full p-0'
             : 'mx-auto w-full max-w-7xl px-4 pb-0 pt-24 sm:px-6 lg:px-8 xl:pt-28'
         }`}
       >

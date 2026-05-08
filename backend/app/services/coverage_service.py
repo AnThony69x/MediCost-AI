@@ -31,7 +31,7 @@ def get_user_plan(client: Client, user_id: UUID) -> UserPlan:
     """
     resp = (
         client.table("usuarios")
-        .select("id, nombre, plan_id, planes(id, nombre, cobertura)")
+        .select("id, nombre, plan_id, genero, fecha_nacimiento, antecedentes, planes(id, nombre, cobertura)")
         .eq("id", str(user_id))
         .maybe_single()
         .execute()
@@ -44,20 +44,17 @@ def get_user_plan(client: Client, user_id: UUID) -> UserPlan:
     data = resp.data
     plan = data["planes"]
 
-    logger.debug(
-        "Usuario '%s' encontrado con plan '%s' (cobertura=%.0f%%)",
-        data["nombre"],
-        plan["nombre"],
-        float(plan["cobertura"]) * 100,
-    )
-
     return UserPlan(
         user_id=UUID(data["id"]),
         user_name=data["nombre"],
         plan_id=UUID(plan["id"]),
         plan_name=plan["nombre"],
         plan_coverage=Decimal(str(plan["cobertura"])),
+        genero=data.get("genero"),
+        fecha_nacimiento=data.get("fecha_nacimiento"),
+        antecedentes=data.get("antecedentes") or [],
     )
+
 
 
 def get_coverage_rule(

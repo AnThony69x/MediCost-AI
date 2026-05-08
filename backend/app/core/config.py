@@ -25,6 +25,11 @@ class Settings(BaseSettings):
     GEMINI_KEY: str = ""
     GEMINI_MODEL: str = "gemini-1.5-flash"
 
+    # Groq
+    GROQ_API_KEY: str = ""
+    GROQ_MODEL: str = "llama-3.3-70b-versatile"
+
+
     # CORS
     CORS_ORIGINS: List[str] = [
         "http://localhost:3000",

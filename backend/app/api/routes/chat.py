@@ -25,7 +25,7 @@ from app.schemas.common import ErrorResponse
 from app.services.coverage_service import get_coverage_rule, get_user_plan
 from app.services.hospital_service import get_ranked_hospitals
 from app.services.symptom_service import get_service_by_specialty
-from app.utils.chat_history import save_chat_history
+from app.utils.chat_history import save_chat_history, get_recent_history
 from app.utils.natural_response import (
     build_conversational_response,
     build_natural_response,
@@ -68,7 +68,15 @@ def chat(
 
         history_payload = [turn.model_dump() for turn in request.history]
 
-        if not detect_medical_intent(request.message):
+        # Enriquecer contexto con Supabase si el historial es breve (memoria a largo plazo)
+        if len(history_payload) < 2:
+            db_history = get_recent_history(db, request.user_id, session_id=request.session_id)
+            if db_history:
+                history_payload = db_history + history_payload
+                logger.info("Contexto enriquecido con %d turnos de la DB", len(db_history))
+
+        # ── 1. Detectar intención médica con contexto ────────────────────
+        if not detect_medical_intent(request.message, history=history_payload):
             conversational_message = build_conversational_response(
                 message=request.message,
                 history=history_payload,
@@ -85,20 +93,20 @@ def chat(
                 mensaje=conversational_message,
             )
 
-            save_chat_history(db, request.user_id, request.message, response)
+            save_chat_history(db, request.user_id, request.message, response, session_id=request.session_id)
             return response
 
-        # ── 1. Clasificar síntoma ──────────────────────────────────────────
-        specialty_name = classify_symptom(request.message)
+        # ── 2. Clasificar síntoma con contexto ───────────────────────────
+        specialty_name = classify_symptom(request.message, history=history_payload)
         logger.info("Especialidad determinada: '%s'", specialty_name)
 
-        # ── 2. Obtener servicio médico para la especialidad ────────────────
+        # ── 3. Obtener servicio médico para la especialidad ────────────────
         service = get_service_by_specialty(db, specialty_name)
 
-        # ── 3. Obtener usuario y plan ──────────────────────────────────────
+        # ── 4. Obtener usuario y plan ──────────────────────────────────────
         user_plan = get_user_plan(db, request.user_id)
 
-        # ── 4. Obtener regla de cobertura (plan + servicio) ────────────────
+        # ── 5. Obtener regla de cobertura (plan + servicio) ────────────────
         coverage_rule = get_coverage_rule(
             db,
             plan_id=user_plan.plan_id,
@@ -107,7 +115,7 @@ def chat(
             service_name=service.service_name,
         )
 
-        # ── 5. Rankear hospitales por copago ──────────────────────────────
+        # ── 6. Rankear hospitales por copago ──────────────────────────────
         hospitals = get_ranked_hospitals(
             db,
             service_id=service.service_id,
@@ -115,7 +123,7 @@ def chat(
             service_name=service.service_name,
         )
 
-        # ── 6. Construir respuesta ─────────────────────────────────────────
+        # ── 7. Construir respuesta natural con contexto ────────────────────
         hospital_results = [
             HospitalResult(
                 nombre=h.hospital_name,
@@ -137,7 +145,14 @@ def chat(
             hospital_name=best.nombre,
             location=best.ubicacion,
             copay=best.copago,
+            history=history_payload,
+            user_profile={
+                "genero": user_plan.genero,
+                "fecha_nacimiento": user_plan.fecha_nacimiento,
+                "antecedentes": user_plan.antecedentes,
+            },
         )
+
 
         response = ChatResponse(
             requiere_asesoria_medica=True,
@@ -157,8 +172,9 @@ def chat(
             best.copago,
         )
 
-        # ── 7. Guardar historial (best-effort, no bloquea respuesta) ───────
-        save_chat_history(db, request.user_id, request.message, response)
+        # ── 8. Guardar historial (best-effort) ─────────────────────────────
+        save_chat_history(db, request.user_id, request.message, response, session_id=request.session_id)
+
 
         return response
 
