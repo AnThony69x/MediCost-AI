@@ -29,7 +29,7 @@ function BurbujaMensaje({ mensaje }: BurbujaMensajeProps) {
       <div className="h-8 w-8 shrink-0 rounded-xl bg-gradient-to-tr from-slate-900 to-slate-800 border border-white/5 flex items-center justify-center text-primary shadow-2xl transition-transform group-hover:rotate-12">
         <Bot size={18} />
       </div>
-      <div className="w-full max-w-[92%] sm:max-w-[85%] space-y-4 rounded-3xl rounded-tl-none glass-card p-5 border-white/5 transition-all group-hover:border-white/10 relative overflow-hidden shadow-2xl">
+      <div className="w-full max-w-[95%] sm:max-w-[92%] lg:max-w-[90%] space-y-4 rounded-3xl rounded-tl-none glass-card p-4 sm:p-5 border-white/5 transition-all group-hover:border-white/10 relative overflow-hidden shadow-2xl">
         {/* Subtle accent indicator */}
         <div className="absolute top-0 left-0 w-1 h-full bg-primary/30" />
         

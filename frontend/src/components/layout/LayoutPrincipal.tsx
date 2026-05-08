@@ -18,7 +18,7 @@ function LayoutPrincipal({
 
   return (
     <div className={`relative flex flex-col overflow-x-hidden selection:bg-primary/20 selection:text-primary ${
-      isApp ? 'h-[100dvh] overflow-hidden' : 'min-h-screen'
+      isApp ? 'min-h-[100svh] h-[100dvh] overflow-hidden' : 'min-h-screen'
     }`}>
       <SmoothScroll />
       

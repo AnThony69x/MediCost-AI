@@ -19,7 +19,7 @@ function ListaHospitales({ hospitales }: ListaHospitalesProps) {
   const mejor = ordenados[0]
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <div className="flex items-center justify-between px-1">
         <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Opciones de Red</p>
         <div className="flex gap-1">
@@ -29,12 +29,13 @@ function ListaHospitales({ hospitales }: ListaHospitalesProps) {
         </div>
       </div>
       
-      {/* Horizontal Carousel */}
-      <div className="flex gap-4 overflow-x-auto pb-4 pt-1 snap-x scroll-smooth custom-scrollbar-hide">
+      <div className="rounded-2xl border border-white/5 bg-slate-950/30 p-2 sm:p-3">
+      {/* Mobile/Tablet: Horizontal carousel | Desktop: 2-column grid */}
+      <div className="flex gap-3 overflow-x-auto pb-2 pt-1 pr-1 snap-x snap-mandatory scroll-smooth custom-scrollbar lg:grid lg:grid-cols-2 lg:overflow-visible lg:snap-none lg:pb-0 lg:pt-0 lg:pr-0">
         {ordenados.map((hospital) => (
           <div 
             key={hospital.nombre} 
-            className="min-w-[280px] sm:min-w-[320px] snap-center"
+            className="shrink-0 snap-start w-[88%] min-w-[240px] sm:w-[72%] sm:min-w-[300px] lg:w-auto lg:min-w-0 lg:shrink"
           >
             <TarjetaHospital
               nombre={hospital.nombre}
@@ -44,6 +45,7 @@ function ListaHospitales({ hospitales }: ListaHospitalesProps) {
             />
           </div>
         ))}
+      </div>
       </div>
       
       <p className="text-[10px] text-slate-500 italic px-1">
