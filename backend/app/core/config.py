@@ -16,7 +16,10 @@ class Settings(BaseSettings):
 
     # Supabase
     SUPABASE_URL: str
-    SUPABASE_KEY: str  # service role key → bypasses RLS
+    # Compatibilidad: usar preferentemente SUPABASE_SERVICE_ROLE_KEY.
+    # SUPABASE_KEY se mantiene para proyectos antiguos.
+    SUPABASE_SERVICE_ROLE_KEY: str = ""
+    SUPABASE_KEY: str = ""
 
     # Google Gemini (opcional)
     GEMINI_KEY: str = ""
