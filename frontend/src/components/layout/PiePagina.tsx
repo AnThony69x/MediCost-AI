@@ -1,25 +1,23 @@
+import { Link } from 'react-router-dom'
+
 function PiePagina() {
   return (
-    <footer className="border-t border-stroke bg-white/70 py-12">
-      <div className="mx-auto grid max-w-6xl gap-6 px-6 md:grid-cols-[1.4fr_1fr_1fr] md:items-center">
+    <footer className="border-t border-stroke bg-white/70 py-10">
+      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 md:flex-row md:items-center md:justify-between">
         <div>
           <p className="font-display text-lg font-semibold text-ink">
-            MediCost AI
+            MediCost-AI
           </p>
-          <p className="text-sm text-muted">
-            Orientamos copagos con datos reales y un lenguaje claro.
+          <p className="mt-1 text-sm text-muted">
+            Orientación sobre copagos y red hospitalaria con lenguaje claro.
           </p>
         </div>
-        <div className="grid gap-2 text-sm text-muted">
-          <a href="#beneficios">Beneficios</a>
-          <a href="#flujo">Flujo</a>
-          <a href="#cta">Contactar</a>
-        </div>
-        <div className="rounded-xl border border-stroke bg-white p-4 shadow-soft">
-          <p className="text-xs uppercase tracking-widest text-muted">
-            Seguridad
-          </p>
-          <p className="text-base font-semibold text-ink">Datos cifrados</p>
+        <div className="flex flex-wrap gap-4 text-sm text-muted">
+          <a href="#como-funciona">Cómo funciona</a>
+          <a href="#que-resuelve">Qué resuelve</a>
+          <Link to="/chat" className="font-semibold text-accent">
+            Ir al chat
+          </Link>
         </div>
       </div>
     </footer>

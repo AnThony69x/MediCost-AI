@@ -4,9 +4,14 @@ import { useState } from 'react'
 type EntradaChatProps = {
   onEnviar: (texto: string) => void
   deshabilitado?: boolean
+  mostrarTextoEnviar?: boolean
 }
 
-function EntradaChat({ onEnviar, deshabilitado = false }: EntradaChatProps) {
+function EntradaChat({
+  onEnviar,
+  deshabilitado = false,
+  mostrarTextoEnviar = false,
+}: EntradaChatProps) {
   const [texto, setTexto] = useState('')
 
   const enviar = () => {
@@ -20,7 +25,7 @@ function EntradaChat({ onEnviar, deshabilitado = false }: EntradaChatProps) {
       <input
         type="text"
         className="flex-1 bg-transparent text-sm text-ink outline-none placeholder:text-muted"
-        placeholder="Describe tu sintoma (ej: dolor en el pecho)"
+        placeholder="Ej: dolor en el pecho, fiebre, dolor de cabeza…"
         value={texto}
         onChange={(event) => setTexto(event.target.value)}
         onKeyDown={(event) => {
@@ -32,10 +37,19 @@ function EntradaChat({ onEnviar, deshabilitado = false }: EntradaChatProps) {
         type="button"
         onClick={enviar}
         disabled={deshabilitado}
-        className="grid h-10 w-10 place-items-center rounded-full bg-info text-white transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
+        className={`inline-flex items-center justify-center gap-2 rounded-full bg-info font-semibold text-white transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60 ${
+          mostrarTextoEnviar ? 'px-4 py-2 text-sm' : 'h-10 w-10 shrink-0'
+        }`}
         aria-label="Enviar mensaje"
       >
-        <Send size={18} />
+        {mostrarTextoEnviar ? (
+          <>
+            <Send size={18} aria-hidden />
+            Enviar
+          </>
+        ) : (
+          <Send size={18} />
+        )}
       </button>
     </div>
   )

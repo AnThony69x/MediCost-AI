@@ -1,10 +1,6 @@
 import RecommendationBanner from '../ui/RecommendationBanner'
 import TarjetaHospital from './TarjetaHospital'
-
-type Hospital = {
-  nombre: string
-  copago: number
-}
+import type { Hospital } from '../../services/servicioChat'
 
 type ListaHospitalesProps = {
   hospitales: Hospital[]
@@ -34,6 +30,7 @@ function ListaHospitales({ hospitales }: ListaHospitalesProps) {
             key={hospital.nombre}
             nombre={hospital.nombre}
             copago={hospital.copago}
+            costo={hospital.costo}
             destacado={hospital.nombre === mejor.nombre}
           />
         ))}

@@ -1,66 +1,42 @@
+import { Link } from 'react-router-dom'
 import heroImg from '../../assets/hero.png'
-
-const indicadores = [
-  { titulo: '95%', descripcion: 'precisiones en simulaciones' },
-  { titulo: '2 min', descripcion: 'tiempo promedio de respuesta' },
-  { titulo: '24/7', descripcion: 'disponibilidad operativa' },
-]
 
 function HeroPrincipal() {
   return (
-    <section id="inicio" className="grid items-center gap-12 py-16 lg:grid-cols-[1.2fr_0.8fr]">
-      <div className="space-y-6">
-        <span className="text-xs font-semibold uppercase tracking-[0.3em] text-muted">
-          Plataforma clinica para copagos
-        </span>
-        <h1 className="text-balance font-display text-4xl font-semibold text-ink sm:text-5xl lg:text-6xl">
-          Decide con claridad, estima copagos y deriva al especialista ideal
+    <section
+      id="inicio"
+      className="grid items-center gap-10 py-12 lg:grid-cols-[1.15fr_0.85fr] lg:gap-12"
+    >
+      <div className="space-y-5">
+        <h1 className="text-balance font-display text-4xl font-semibold text-ink sm:text-5xl lg:text-5xl">
+          Calcula tu copago antes de ir al hospital
         </h1>
-        <p className="text-base text-muted sm:text-lg">
-          MediCost AI traduce sintomas en decisiones accionables: cobertura,
-          costos estimados y red hospitalaria en un solo flujo.
+        <p className="max-w-xl text-base text-muted sm:text-lg">
+          Ingresa tus síntomas y obtén especialidad, cobertura y costos en
+          segundos.
         </p>
         <div className="flex flex-wrap gap-3">
-          <button
-            type="button"
+          <Link
+            to="/chat"
             className="rounded-full bg-accent px-5 py-3 text-sm font-semibold text-white shadow-medium transition hover:-translate-y-0.5"
           >
-            Probar consulta
-          </button>
-          <button
-            type="button"
-            className="rounded-full border border-accent px-5 py-3 text-sm font-semibold text-accent transition hover:-translate-y-0.5"
+            Probar ahora
+          </Link>
+          <a
+            href="#como-funciona"
+            className="rounded-full border border-stroke bg-white px-5 py-3 text-sm font-semibold text-ink shadow-soft transition hover:-translate-y-0.5"
           >
-            Ver flujo completo
-          </button>
-        </div>
-        <div className="grid gap-4 sm:grid-cols-3">
-          {indicadores.map((item) => (
-            <div
-              key={item.titulo}
-              className="glass rounded-xl px-4 py-3 text-sm text-muted"
-            >
-              <p className="text-lg font-semibold text-ink">{item.titulo}</p>
-              <p>{item.descripcion}</p>
-            </div>
-          ))}
+            Ver pasos
+          </a>
         </div>
       </div>
       <div className="relative grid place-items-center">
-        <div className="absolute h-96 w-96 rounded-full bg-[radial-gradient(circle,_#bceadf_0%,_transparent_70%)]" />
+        <div className="absolute h-80 w-80 rounded-full bg-[radial-gradient(circle,_#bceadf_0%,_transparent_70%)] md:h-96 md:w-96" />
         <img
           src={heroImg}
-          alt="Vista del dashboard de MediCost AI"
-          className="relative z-10 w-[460px] rounded-[28px] shadow-strong"
+          alt="Vista del asistente MediCost-AI"
+          className="relative z-10 w-full max-w-[400px] rounded-[28px] shadow-strong lg:max-w-[440px]"
         />
-        <div className="absolute bottom-[-32px] right-[-28px] z-20 grid gap-2 rounded-2xl border border-stroke bg-white p-4 text-sm shadow-medium">
-          <p className="font-semibold text-ink">Resumen inmediato</p>
-          <p className="text-muted">Copago estimado: $18.40</p>
-          <p className="text-muted">Especialidad sugerida: Cardiologia</p>
-          <span className="w-fit rounded-full bg-accentSoft px-3 py-1 text-xs font-semibold text-accent">
-            Cobertura 82%
-          </span>
-        </div>
       </div>
     </section>
   )
