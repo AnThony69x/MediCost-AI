@@ -1,8 +1,35 @@
+import { useEffect, useRef, useState } from 'react'
 import { HeartPulse } from 'lucide-react'
 
 function Navbar() {
+  const [isVisible, setIsVisible] = useState(true)
+  const lastScrollY = useRef(0)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY
+
+      if (currentScrollY <= 0) {
+        setIsVisible(true)
+      } else if (currentScrollY > lastScrollY.current + 4) {
+        setIsVisible(false)
+      } else if (currentScrollY < lastScrollY.current - 4) {
+        setIsVisible(true)
+      }
+
+      lastScrollY.current = currentScrollY
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
   return (
-    <header className="sticky top-0 z-20 border-b border-stroke bg-canvas/80 backdrop-blur">
+    <header
+      className={`fixed inset-x-0 top-0 z-30 border-b border-stroke bg-canvas/80 backdrop-blur transition-transform duration-300 ${
+        isVisible ? 'translate-y-0' : '-translate-y-full'
+      }`}
+    >
       <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-4">
         <div className="flex items-center gap-3">
           <span className="grid h-10 w-10 place-items-center rounded-2xl bg-accent text-white shadow-medium">

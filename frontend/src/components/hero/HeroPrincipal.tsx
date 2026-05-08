@@ -47,13 +47,13 @@ function HeroPrincipal() {
         </div>
       </div>
       <div className="relative grid place-items-center">
-        <div className="absolute h-56 w-56 rounded-full bg-[radial-gradient(circle,_#bceadf_0%,_transparent_70%)]" />
+        <div className="absolute h-96 w-96 rounded-full bg-[radial-gradient(circle,_#bceadf_0%,_transparent_70%)]" />
         <img
           src={heroImg}
           alt="Vista del dashboard de MediCost AI"
-          className="relative z-10 w-[280px] rounded-[28px] shadow-strong"
+          className="relative z-10 w-[460px] rounded-[28px] shadow-strong"
         />
-        <div className="absolute bottom-[-24px] right-[-8px] z-20 grid gap-2 rounded-2xl border border-stroke bg-white p-4 text-sm shadow-medium">
+        <div className="absolute bottom-[-32px] right-[-28px] z-20 grid gap-2 rounded-2xl border border-stroke bg-white p-4 text-sm shadow-medium">
           <p className="font-semibold text-ink">Resumen inmediato</p>
           <p className="text-muted">Copago estimado: $18.40</p>
           <p className="text-muted">Especialidad sugerida: Cardiologia</p>
