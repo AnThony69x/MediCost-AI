@@ -97,23 +97,23 @@ function HeroPrincipal() {
             />
             
             {/* Floating UI Element - Optimized for performance */}
-            <div className="absolute -bottom-6 -right-4 lg:-right-10 z-20 p-6 rounded-2xl shadow-strong min-w-[240px] animate-bounce-subtle border border-white/10 bg-slate-900/80 backdrop-blur-xl will-change-transform">
-              <p className="text-[10px] font-bold text-accent uppercase tracking-widest mb-3">Resumen Inmediato</p>
+            <div className="hero-resumen relative mt-4 w-full max-w-[320px] sm:max-w-[360px] sm:ml-auto lg:absolute lg:mt-0 lg:-bottom-6 lg:-right-10 z-20 min-w-0 lg:min-w-[240px] rounded-2xl border p-4 sm:p-6 shadow-strong backdrop-blur-xl will-change-transform lg:animate-bounce-subtle">
+              <p className="hero-resumen-kicker mb-3 text-[10px] font-bold uppercase tracking-widest">Resumen Inmediato</p>
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-xs text-slate-400">Copago Estimado</span>
-                  <span className="text-lg font-bold text-white">$18.40</span>
+                  <span className="hero-resumen-label text-xs">Copago Estimado</span>
+                  <span className="hero-resumen-value text-lg font-bold">$18.40</span>
                 </div>
                 <div className="space-y-2">
-                  <div className="flex justify-between text-[10px] font-bold text-slate-500 uppercase">
+                  <div className="hero-resumen-meta flex justify-between text-[10px] font-bold uppercase">
                     <span>Cobertura</span>
                     <span>82%</span>
                   </div>
-                  <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+                  <div className="hero-resumen-track w-full h-2 rounded-full overflow-hidden">
                     <div className="h-full bg-accent w-[82%] rounded-full shadow-glow-accent" />
                   </div>
                 </div>
-                <p className="text-[10px] text-slate-500 italic text-center">Basado en tu red hospitalaria</p>
+                <p className="hero-resumen-footnote text-[10px] italic text-center">Basado en tu red hospitalaria</p>
               </div>
             </div>
             

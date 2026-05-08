@@ -4,6 +4,7 @@ import { ArrowLeft, Zap } from 'lucide-react'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import CajaChat from '../components/chat/CajaChat'
+import ThemeToggle from '../components/common/ThemeToggle'
 
 const pasosGuia = [
   'Escribe tu síntoma',
@@ -63,12 +64,13 @@ function PaginaChat() {
           </div>
         </div>
         
-        <div className="hidden md:flex items-center gap-4">
-          <div className="text-right">
+        <div className="flex items-center gap-3 md:gap-4">
+          <ThemeToggle />
+          <div className="hidden text-right md:block">
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Plan Activo</p>
             <p className="text-xs font-semibold text-white">Cobertura Premium</p>
           </div>
-          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-slate-800 to-slate-900 border border-white/5 flex items-center justify-center">
+          <div className="hidden h-10 w-10 rounded-xl bg-gradient-to-br from-slate-800 to-slate-900 border border-white/5 md:flex items-center justify-center">
             <div className="h-6 w-6 rounded-full bg-primary/20 flex items-center justify-center">
               <div className="h-3 w-3 rounded-full bg-primary" />
             </div>

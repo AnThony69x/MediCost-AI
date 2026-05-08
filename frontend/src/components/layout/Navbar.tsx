@@ -5,6 +5,7 @@ import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { LANDING_SECTIONS } from '../../constants/landingSections'
 import { useLandingSectionNav } from '../../hooks/useLandingSectionNav'
+import ThemeToggle from '../common/ThemeToggle'
 
 function Navbar() {
   const irASeccion = useLandingSectionNav()
@@ -32,16 +33,16 @@ function Navbar() {
 
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 px-6 py-4">
+    <header className="fixed top-0 left-0 right-0 z-50 px-2 sm:px-6 py-2.5 sm:py-4">
       <nav
         ref={navRef}
-        className="mx-auto flex max-w-6xl items-center justify-between rounded-full border border-white/5 bg-slate-950/40 px-6 py-3 backdrop-blur-xl shadow-2xl"
+        className="mx-auto flex max-w-6xl items-center justify-between rounded-2xl sm:rounded-full border border-white/5 bg-slate-950/40 px-2.5 sm:px-6 py-2 sm:py-3 backdrop-blur-xl shadow-2xl"
       >
-        <Link to="/" className="nav-item flex items-center gap-2 group">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-white shadow-glow-primary transition-transform group-hover:rotate-12">
-            <Activity size={20} />
+        <Link to="/" className="nav-item flex items-center gap-1.5 sm:gap-2 group min-w-0">
+          <div className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-primary text-white shadow-glow-primary transition-transform group-hover:rotate-12">
+            <Activity size={18} />
           </div>
-          <span className="text-xl font-bold tracking-tight text-white">
+          <span className="truncate text-lg sm:text-xl font-bold tracking-tight text-white">
             MediCost<span className="text-primary">AI</span>
           </span>
         </Link>
@@ -62,12 +63,14 @@ function Navbar() {
           ))}
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4">
+          <ThemeToggle />
           <Link
             to="/chat"
-            className="nav-item btn-primary py-2 px-6 text-sm whitespace-nowrap"
+            className="nav-item btn-primary h-9 px-2.5 sm:h-11 sm:px-6 text-[11px] sm:text-sm whitespace-nowrap"
           >
-            Simular Copago
+            <span className="sm:hidden">Simular</span>
+            <span className="hidden sm:inline">Simular Copago</span>
           </Link>
         </div>
       </nav>

@@ -17,7 +17,7 @@ function BurbujaMensaje({ mensaje }: BurbujaMensajeProps) {
         <div className="max-w-[85%] sm:max-w-[70%] rounded-2xl rounded-br-none bg-gradient-to-br from-primary/90 to-indigo-600/90 px-5 py-3 text-[14px] leading-relaxed text-white shadow-lg shadow-primary/10 backdrop-blur-md border border-white/10 transition-all hover:shadow-primary/20 hover:scale-[1.01]">
           <p className="font-medium font-sans">{mensaje.texto}</p>
         </div>
-        <div className="h-7 w-7 shrink-0 rounded-full bg-slate-800 border border-white/10 flex items-center justify-center text-slate-400 shadow-xl">
+        <div className="avatar-user h-7 w-7 shrink-0 rounded-full flex items-center justify-center shadow-xl">
           <User size={14} />
         </div>
       </div>
@@ -26,7 +26,7 @@ function BurbujaMensaje({ mensaje }: BurbujaMensajeProps) {
 
   return (
     <div className="flex justify-start items-start gap-3 group px-2 sm:px-0">
-      <div className="h-8 w-8 shrink-0 rounded-xl bg-gradient-to-tr from-slate-900 to-slate-800 border border-white/5 flex items-center justify-center text-primary shadow-2xl transition-transform group-hover:rotate-12">
+      <div className="avatar-assistant h-8 w-8 shrink-0 rounded-xl flex items-center justify-center shadow-2xl transition-transform group-hover:rotate-12">
         <Bot size={18} />
       </div>
       <div className="w-full max-w-[95%] sm:max-w-[92%] lg:max-w-[90%] space-y-4 rounded-3xl rounded-tl-none glass-card p-4 sm:p-5 border-white/5 transition-all group-hover:border-white/10 relative overflow-hidden shadow-2xl">

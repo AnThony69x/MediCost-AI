@@ -27,7 +27,7 @@ function TarjetaHospital({
           <p className="mt-1 text-[10px] uppercase tracking-wider text-slate-500">Comparación de Red</p>
         </div>
         {destacado ? (
-          <span className="shrink-0 rounded-full bg-primary px-2.5 py-1 text-[9px] font-bold text-white shadow-glow-primary sm:px-3 sm:text-[10px]">
+          <span className="badge-mejor-opcion shrink-0 rounded-full px-2.5 py-1 text-[9px] font-bold sm:px-3 sm:text-[10px]">
             MEJOR OPCIÓN
           </span>
         ) : null}
