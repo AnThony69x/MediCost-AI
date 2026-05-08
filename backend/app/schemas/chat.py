@@ -9,6 +9,13 @@ from uuid import UUID
 from pydantic import BaseModel, Field
 
 
+class ConversationTurn(BaseModel):
+    """Turno previo de conversación para dar contexto al modelo."""
+
+    role: str = Field(..., description="user o assistant")
+    content: str = Field(..., min_length=1, max_length=1000)
+
+
 class ChatRequest(BaseModel):
     """Petición del usuario al chat."""
 
@@ -24,6 +31,10 @@ class ChatRequest(BaseModel):
         description="Mensaje del usuario describiendo sus síntomas.",
         examples=["Tengo dolor en el pecho"],
     )
+    history: List[ConversationTurn] = Field(
+        default_factory=list,
+        description="Historial reciente de la conversación para dar contexto.",
+    )
 
 
 class HospitalResult(BaseModel):
@@ -36,6 +47,11 @@ class HospitalResult(BaseModel):
 
 class ChatResponse(BaseModel):
     """Respuesta completa del agente médico."""
+
+    requiere_asesoria_medica: bool = Field(
+        default=True,
+        description="Indica si la respuesta incluye orientación médica con copago/hospitales.",
+    )
 
     especialidad: str = Field(
         ..., description="Especialidad médica recomendada según los síntomas."

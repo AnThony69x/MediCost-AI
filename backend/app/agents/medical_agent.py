@@ -117,6 +117,42 @@ def _rule_based_classify(message: str) -> Optional[str]:
     return None
 
 
+def _looks_medical_by_rules(message: str) -> bool:
+    """Determina si un mensaje parece clínico sin clasificar especialidad."""
+    return _rule_based_classify(message) is not None
+
+
+def detect_medical_intent(message: str) -> bool:
+    """
+    Detecta si el mensaje debe pasar por el flujo médico o si es una charla normal.
+
+    Usa Gemini como primer intento cuando está disponible y cae a reglas locales.
+    """
+    if settings.GEMINI_KEY:
+        prompt = f"""Eres un filtro de intención.
+Responde únicamente YES o NO.
+
+YES = el usuario habla de síntomas, dolor, malestar, fiebre, mareo, tos, lesión o una molestia física.
+NO = saludo, agradecimiento, conversación general, duda administrativa o mensaje sin síntomas.
+
+Mensaje: {message!r}
+"""
+
+        try:
+            genai.configure(api_key=settings.GEMINI_KEY)
+            model = genai.GenerativeModel(settings.GEMINI_MODEL)
+            response = model.generate_content(prompt)
+            raw = (response.text or "").strip().upper()
+            if raw.startswith("YES"):
+                return True
+            if raw.startswith("NO"):
+                return False
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("No se pudo detectar intención médica con Gemini: %s", exc)
+
+    return _looks_medical_by_rules(message)
+
+
 # ---------------------------------------------------------------------------
 # Clasificación con Google Gemini
 # ---------------------------------------------------------------------------

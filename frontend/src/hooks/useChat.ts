@@ -1,5 +1,9 @@
 import { useCallback, useState } from 'react'
-import { enviarChat, type RespuestaChat } from '../services/servicioChat'
+import {
+  enviarChat,
+  type ConversationTurn,
+  type RespuestaChat,
+} from '../services/servicioChat'
 
 export type MensajeChat = {
   id: string
@@ -24,20 +28,27 @@ export function useChat() {
     if (!texto.trim()) return
 
     setError(null)
-    setMensajes((prev) => [
-      ...prev,
-      { id: generarId(), tipo: 'usuario', texto },
-    ])
+
+    const history: ConversationTurn[] = mensajes
+      .slice(-8)
+      .map((mensaje) => ({
+        role: mensaje.tipo === 'usuario' ? 'user' : 'assistant',
+        content: mensaje.texto,
+      }))
+
+    setMensajes((prev) => [...prev, { id: generarId(), tipo: 'usuario', texto }])
 
     setCargando(true)
     try {
-      const respuesta = await enviarChat(texto)
+      const respuesta = await enviarChat(texto, history)
       setMensajes((prev) => [
         ...prev,
         {
           id: generarId(),
           tipo: 'sistema',
-          texto: 'Respuesta generada',
+          texto:
+            respuesta.mensaje ||
+            'Listo, ya tengo una orientación para tu caso y te la muestro abajo.',
           respuesta,
         },
       ])
@@ -55,7 +66,7 @@ export function useChat() {
     } finally {
       setCargando(false)
     }
-  }, [])
+  }, [mensajes])
 
   return { mensajes, enviarMensaje, cargando, error }
 }

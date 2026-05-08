@@ -3,7 +3,7 @@ import TarjetaCopago from '../copago/TarjetaCopago'
 import ListaHospitales from '../hospitals/ListaHospitales'
 
 type BurbujaMensajeProps = {
-  mensaje: MensajeChat
+  readonly mensaje: MensajeChat
 }
 
 function BurbujaMensaje({ mensaje }: BurbujaMensajeProps) {
@@ -20,14 +20,14 @@ function BurbujaMensaje({ mensaje }: BurbujaMensajeProps) {
   return (
     <div className="flex justify-start">
       <div className="w-full max-w-[80%] rounded-2xl border border-stroke bg-white p-4 shadow-soft">
-        <p className="text-sm font-semibold text-ink">Resumen de la consulta</p>
-        {mensaje.respuesta ? (
+        {mensaje.respuesta?.requiere_asesoria_medica ? (
           <div className="mt-4 grid gap-4">
+            <p className="text-sm text-ink">{mensaje.texto}</p>
             <TarjetaCopago respuesta={mensaje.respuesta} />
             <ListaHospitales hospitales={mensaje.respuesta.hospitales} />
           </div>
         ) : (
-          <p className="mt-2 text-sm text-muted">{mensaje.texto}</p>
+          <p className="text-sm text-muted">{mensaje.texto}</p>
         )}
       </div>
     </div>

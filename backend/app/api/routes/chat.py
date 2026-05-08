@@ -12,11 +12,13 @@ Orquesta el flujo completo:
 """
 
 import logging
+from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException
 from supabase import Client
 
 from app.agents.medical_agent import classify_symptom
+from app.agents.medical_agent import detect_medical_intent
 from app.core.supabase_client import get_supabase_client
 from app.schemas.chat import ChatRequest, ChatResponse, HospitalResult
 from app.schemas.common import ErrorResponse
@@ -24,6 +26,10 @@ from app.services.coverage_service import get_coverage_rule, get_user_plan
 from app.services.hospital_service import get_ranked_hospitals
 from app.services.symptom_service import get_service_by_specialty
 from app.utils.chat_history import save_chat_history
+from app.utils.natural_response import (
+    build_conversational_response,
+    build_natural_response,
+)
 from app.utils.exceptions import MediCostException
 
 logger = logging.getLogger(__name__)
@@ -33,7 +39,6 @@ router = APIRouter(tags=["Chat"])
 
 @router.post(
     "/chat",
-    response_model=ChatResponse,
     responses={
         404: {"model": ErrorResponse, "description": "Recurso no encontrado"},
         422: {"description": "Error de validación en la petición"},
@@ -49,7 +54,7 @@ router = APIRouter(tags=["Chat"])
 )
 def chat(
     request: ChatRequest,
-    db: Client = Depends(get_supabase_client),
+    db: Annotated[Client, Depends(get_supabase_client)],
 ) -> ChatResponse:
     """
     Flujo de procesamiento del chat médico.
@@ -60,6 +65,28 @@ def chat(
             request.user_id,
             request.message,
         )
+
+        history_payload = [turn.model_dump() for turn in request.history]
+
+        if not detect_medical_intent(request.message):
+            conversational_message = build_conversational_response(
+                message=request.message,
+                history=history_payload,
+            )
+
+            response = ChatResponse(
+                requiere_asesoria_medica=False,
+                especialidad="",
+                servicio="",
+                cobertura=0.0,
+                copago=0.0,
+                hospitales=[],
+                recomendacion="",
+                mensaje=conversational_message,
+            )
+
+            save_chat_history(db, request.user_id, request.message, response)
+            return response
 
         # ── 1. Clasificar síntoma ──────────────────────────────────────────
         specialty_name = classify_symptom(request.message)
@@ -101,20 +128,26 @@ def chat(
         best = hospital_results[0]
         coverage_pct = int(float(coverage_rule.coverage) * 100)
 
+        natural_message = build_natural_response(
+            message=request.message,
+            specialty=specialty_name,
+            service=service.service_name,
+            coverage_pct=coverage_pct,
+            plan_name=user_plan.plan_name,
+            hospital_name=best.nombre,
+            location=best.ubicacion,
+            copay=best.copago,
+        )
+
         response = ChatResponse(
+            requiere_asesoria_medica=True,
             especialidad=specialty_name,
             servicio=service.service_name,
             cobertura=float(coverage_rule.coverage),
             copago=best.copago,
             hospitales=hospital_results,
             recomendacion=best.nombre,
-            mensaje=(
-                f"Según su síntoma, se recomienda la especialidad de {specialty_name}. "
-                f"Con su plan {user_plan.plan_name} tiene una cobertura del {coverage_pct}% "
-                f"para {service.service_name}. "
-                f"El hospital más conveniente es {best.nombre} "
-                f"({best.ubicacion}) con un copago estimado de ${best.copago:.2f}."
-            ),
+            mensaje=natural_message,
         )
 
         logger.info(
