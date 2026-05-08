@@ -6,7 +6,7 @@ alwaysApply: true
 # Architecture Guardrails
 
 - Respect system roles:
-  - `frontend/` (Next.js + TypeScript + Tailwind): UI, chat interaction, results display.
+  - `frontend/` (React + Vite + TypeScript): UI, chat interaction, results display.
   - `backend/` (FastAPI): business rules, copay computation, ranking orchestration, AI integration.
   - Supabase/Postgres (`database/` + DB access): persistence, auth, coverage/service/hospital data.
 - Keep business logic in backend services, not UI components.

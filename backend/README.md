@@ -20,7 +20,7 @@ Se encarga de:
 - FastAPI
 - Python
 - Supabase (cliente para conexión a BD)
-- Google Gemini (IA - opcional en fases avanzadas)
+- Google Gemini (vía `GEMINI_KEY`)
 
 ---
 

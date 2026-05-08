@@ -16,25 +16,25 @@ Permite al usuario:
 ---
 
 ## 🛠️ Tecnologías
-
-- Next.js
+- React
+- Vite
 - TypeScript
-- TailwindCSS
 
 ---
 
 ## 📂 Estructura del proyecto
 
 frontend/
-├── app/        # Rutas y páginas (Next.js App Router)
-├── components/ # Componentes reutilizables
-│   ├── Chat/
-│   ├── Results/
-│   └── UI/
-├── services/   # Conexión con APIs
-├── hooks/      # Custom hooks
-├── types/      # Tipos TypeScript
-└── utils/      # Funciones auxiliares
+├── src/
+│   ├── components/ # Componentes reutilizables
+│   │   ├── Chat/
+│   │   ├── Results/
+│   │   └── UI/
+│   ├── services/   # Conexión con APIs
+│   ├── hooks/      # Custom hooks
+│   ├── types/      # Tipos TypeScript
+│   └── utils/      # Funciones auxiliares
+└── index.html
 
 ---
 
@@ -118,7 +118,7 @@ Se muestra:
 Ejemplo `.env.local`:
 
 ```
-NEXT_PUBLIC_API_URL=http://localhost:8000
+VITE_API_URL=http://localhost:8000
 ```
 
 ---
@@ -127,7 +127,7 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
 
 ```bash
 npm run build
-npm start
+npm run preview
 ```
 
 ---
