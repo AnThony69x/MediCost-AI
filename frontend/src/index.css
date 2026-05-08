@@ -5,13 +5,33 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 7rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
   * {
     @apply box-border;
   }
 
   body {
     @apply bg-canvas text-ink font-sans antialiased;
-    background: linear-gradient(160deg, #f7f4ef 0%, #f1efe7 55%, #f7f4ef 100%);
+    background-color: #f5f2eb;
+    background-image:
+      radial-gradient(ellipse 120% 80% at 100% -20%, rgba(184, 228, 220, 0.45), transparent 55%),
+      radial-gradient(ellipse 90% 70% at -10% 100%, rgba(232, 196, 168, 0.35), transparent 50%),
+      linear-gradient(165deg, #f8f6f0 0%, #f0ebe3 45%, #f7f4ee 100%);
+    background-attachment: fixed;
+  }
+
+  ::selection {
+    @apply bg-accentSoft text-accent;
   }
 
   a {
@@ -30,5 +50,18 @@
 
   .text-balance {
     text-wrap: balance;
+  }
+
+  .surface-card {
+    @apply rounded-2xl border border-stroke bg-white/90 shadow-soft backdrop-blur-sm;
+  }
+
+  .section-kicker {
+    @apply mb-3 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.12em] text-accent;
+  }
+
+  .section-kicker::before {
+    content: '';
+    @apply h-px w-6 bg-accent/40;
   }
 }

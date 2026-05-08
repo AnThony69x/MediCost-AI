@@ -21,8 +21,9 @@ function LayoutPrincipal({
         className="pointer-events-none absolute inset-0 overflow-hidden"
         aria-hidden
       >
-        <div className="absolute -top-32 right-[-120px] h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle,_#c1f2e6_0%,_transparent_70%)] opacity-70" />
-        <div className="absolute bottom-[-140px] left-[-120px] h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle,_#ffd8b1_0%,_transparent_70%)] opacity-70" />
+        <div className="absolute -top-40 right-[-100px] h-[480px] w-[480px] rounded-full bg-[radial-gradient(circle,_rgba(184,228,220,0.55)_0%,_transparent_68%)] opacity-80" />
+        <div className="absolute bottom-[-160px] left-[-140px] h-[460px] w-[460px] rounded-full bg-[radial-gradient(circle,_rgba(232,196,168,0.4)_0%,_transparent_68%)] opacity-90" />
+        <div className="absolute left-1/2 top-[38%] h-[320px] w-[520px] max-w-[90vw] -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse,_rgba(224,242,239,0.35)_0%,_transparent_72%)]" />
       </div>
       {isApp ? null : <Navbar />}
       <main
