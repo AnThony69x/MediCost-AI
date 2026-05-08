@@ -10,7 +10,7 @@ function BurbujaMensaje({ mensaje }: BurbujaMensajeProps) {
   if (mensaje.tipo === 'usuario') {
     return (
       <div className="flex justify-end">
-        <div className="max-w-[75%] rounded-2xl bg-info px-4 py-3 text-sm text-white shadow-medium">
+        <div className="max-w-[82%] rounded-2xl bg-accent px-5 py-3 text-sm leading-6 text-white shadow-glow">
           {mensaje.texto}
         </div>
       </div>
@@ -19,15 +19,19 @@ function BurbujaMensaje({ mensaje }: BurbujaMensajeProps) {
 
   return (
     <div className="flex justify-start">
-      <div className="w-full max-w-[80%] rounded-2xl border border-stroke bg-white p-4 shadow-soft">
+      <div className="w-full max-w-[92%] space-y-4 rounded-3xl glass-card p-5">
         {mensaje.respuesta?.requiere_asesoria_medica ? (
-          <div className="mt-4 grid gap-4">
-            <p className="text-sm text-ink">{mensaje.texto}</p>
+          <div className="space-y-6">
+            <div className="text-sm leading-relaxed text-ink font-medium">
+              {mensaje.texto}
+            </div>
             <TarjetaCopago respuesta={mensaje.respuesta} />
             <ListaHospitales hospitales={mensaje.respuesta.hospitales} />
           </div>
         ) : (
-          <p className="text-sm text-muted">{mensaje.texto}</p>
+          <p className="text-sm leading-relaxed text-muted font-medium">
+            {mensaje.texto}
+          </p>
         )}
       </div>
     </div>
@@ -35,3 +39,4 @@ function BurbujaMensaje({ mensaje }: BurbujaMensajeProps) {
 }
 
 export default BurbujaMensaje
+

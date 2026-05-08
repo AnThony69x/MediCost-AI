@@ -1,7 +1,12 @@
+import { useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { Sparkles } from 'lucide-react'
+import { Sparkles, ArrowRight } from 'lucide-react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useGSAP } from '@gsap/react'
 import heroImg from '../../assets/hero.png'
-import { scrollToSectionId } from '../../utils/scrollSection'
+
+gsap.registerPlugin(ScrollTrigger)
 
 const indicadores = [
   { titulo: '95%', descripcion: 'precisión en simulaciones' },
@@ -10,84 +15,115 @@ const indicadores = [
 ]
 
 function HeroPrincipal() {
+  const container = useRef<HTMLDivElement>(null)
+  const imageRef = useRef<HTMLDivElement>(null)
+
+  useGSAP(() => {
+    ScrollTrigger.refresh()
+    
+    const tl = gsap.timeline({ defaults: { ease: 'power3.out', duration: 1 } })
+
+    tl.from('.hero-badge', { y: 20, opacity: 0, duration: 0.8 })
+      .from('.hero-title', { y: 40, opacity: 0, stagger: 0.1 }, '-=0.4')
+      .from('.hero-desc', { y: 20, opacity: 0 }, '-=0.6')
+      .from('.hero-btns', { y: 20, opacity: 0 }, '-=0.6')
+      .from('.hero-stats', { y: 20, opacity: 0, stagger: 0.2 }, '-=0.4')
+      .from(imageRef.current, { scale: 0.9, opacity: 0, duration: 1.2 }, '-=1')
+
+    gsap.to(imageRef.current, {
+      y: -20,
+      duration: 3,
+      repeat: -1,
+      yoyo: true,
+      ease: 'power1.inOut',
+    })
+  }, { scope: container })
+
   return (
     <section
       id="inicio"
-      className="grid items-center gap-12 py-10 sm:py-12 lg:grid-cols-[1.12fr_0.88fr] lg:gap-14"
+      ref={container}
+      className="grid items-center gap-16 py-12 lg:grid-cols-[1.1fr_0.9fr] lg:py-24"
     >
-      <div className="space-y-6">
-        <p className="section-kicker">Asistente de costos y red</p>
-        <h1 className="text-balance font-display text-4xl font-semibold leading-[1.12] text-ink sm:text-5xl lg:text-[2.65rem] lg:leading-[1.1]">
+      <div className="space-y-8">
+        <div className="hero-badge inline-flex items-center gap-2 rounded-full bg-accent-soft px-4 py-1.5 text-sm font-semibold text-accent">
+          <Sparkles size={14} />
+          <span>Inteligencia Artificial Médica</span>
+        </div>
+        
+        <h1 className="hero-title text-balance text-5xl font-bold leading-[1.1] text-ink sm:text-6xl lg:text-7xl">
           Calcula tu{' '}
-          <span className="relative whitespace-nowrap text-accent">
-            copago
-            <span
-              className="absolute -bottom-1 left-0 right-0 h-2 rounded-full bg-accentGlow/50"
-              aria-hidden
-            />
-          </span>{' '}
+          <span className="text-accent italic">copago</span>{' '}
           antes de ir al hospital
         </h1>
-        <p className="max-w-xl text-base leading-relaxed text-muted sm:text-lg">
-          Describe tus síntomas en lenguaje natural y obtén especialidad
-          orientativa, cobertura estimada y comparación de hospitales en tu red.
+        
+        <p className="hero-desc max-w-xl text-lg leading-relaxed text-muted sm:text-xl">
+          Describe tus síntomas y obtén una estimación precisa de costos, especialidad sugerida y comparación de hospitales en tiempo real.
         </p>
-        <div className="flex flex-wrap gap-3">
-          <Link
-            to="/chat"
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-accent px-5 py-3 text-sm font-semibold text-white shadow-medium transition hover:-translate-y-0.5 hover:bg-accentHover hover:shadow-glow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/45 focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
-          >
-            <Sparkles size={17} aria-hidden className="opacity-90" />
-            Probar ahora
+        
+        <div className="hero-btns flex flex-wrap gap-4">
+          <Link to="/chat" className="btn-primary flex items-center gap-2">
+            Comenzar simulación
+            <ArrowRight size={18} />
           </Link>
-          <a
-            href="#como-funciona"
-            className="inline-flex items-center justify-center rounded-full border border-strokeStrong bg-white/90 px-5 py-3 text-sm font-semibold text-ink shadow-soft backdrop-blur-sm transition hover:-translate-y-0.5 hover:border-accent/25 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/35"
-            onClick={(e) => {
-              e.preventDefault()
-              scrollToSectionId('como-funciona')
-            }}
-          >
-            Ver pasos
+          <a href="#como-funciona" className="btn-secondary">
+            Ver cómo funciona
           </a>
         </div>
-        <div className="grid gap-3 pt-1 sm:grid-cols-3">
+        
+        <div className="hero-stats grid gap-6 pt-4 sm:grid-cols-3">
           {indicadores.map((item) => (
             <div
               key={item.titulo}
-              className="surface-card border-white/60 px-4 py-3.5 transition hover:border-accent/15 hover:shadow-medium"
+              className="group border-l-2 border-accent/20 pl-4 transition-colors hover:border-accent"
             >
-              <p className="font-display text-xl font-semibold text-ink">
-                {item.titulo}
-              </p>
-              <p className="mt-1 text-sm leading-snug text-muted">
-                {item.descripcion}
-              </p>
+              <p className="text-2xl font-bold text-ink">{item.titulo}</p>
+              <p className="text-sm text-muted">{item.descripcion}</p>
             </div>
           ))}
         </div>
       </div>
-      <div className="relative mx-auto grid w-full max-w-[440px] place-items-center pb-10 pt-4 sm:pb-12 lg:mx-0 lg:max-w-none lg:pb-14">
-        <div className="absolute aspect-square w-[min(100%,380px)] rounded-full bg-[radial-gradient(circle,_rgba(184,228,220,0.55)_0%,_transparent_68%)] md:w-[420px]" />
-        <img
-          src={heroImg}
-          alt="Vista del asistente MediCost-AI"
-          className="relative z-10 w-full max-w-[400px] rounded-[28px] shadow-strong ring-1 ring-stroke lg:max-w-[430px]"
-        />
-        <div className="absolute bottom-2 right-0 z-20 w-[min(100%,288px)] rounded-2xl border border-strokeStrong bg-white/95 p-4 text-sm shadow-medium backdrop-blur-sm sm:right-[-8px] sm:min-w-[248px] lg:bottom-0 lg:right-[-12px]">
-          <p className="text-xs font-semibold uppercase tracking-wide text-accent">
-            Vista previa
-          </p>
-          <p className="mt-2 font-semibold text-ink">Resumen inmediato</p>
-          <p className="mt-2 text-muted">Copago estimado: $18.40</p>
-          <p className="text-muted">Especialidad sugerida: Cardiología</p>
-          <span className="mt-3 inline-block w-fit rounded-full bg-accentSoft px-3 py-1 text-xs font-semibold text-accent">
-            Cobertura 82%
-          </span>
+
+      <div ref={imageRef} className="relative hidden lg:block">
+        <div className="absolute inset-0 bg-accent/10 blur-[100px] rounded-full" />
+        
+        {/* Image Container */}
+        <div className="relative z-10 glass-card rounded-[2.5rem] p-4">
+          <div className="rounded-[2rem] overflow-hidden shadow-2xl border border-white/20">
+            <img
+              src={heroImg}
+              alt="MediCost-AI Interface"
+              className="w-full transition-transform duration-500 hover:scale-[1.05]"
+            />
+          </div>
+          
+          {/* Floating UI Element - Now outside the overflow-hidden container but inside the relative container */}
+          <div className="absolute -bottom-6 -right-10 z-20 glass-card p-6 rounded-2xl shadow-strong min-w-[260px] animate-bounce-subtle">
+            <p className="text-xs font-bold text-accent uppercase tracking-widest mb-3">Resumen Inmediato</p>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-medium text-muted">Copago Estimado</span>
+                <span className="text-lg font-bold text-ink">$18.40</span>
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between text-[10px] font-bold text-muted uppercase">
+                  <span>Cobertura</span>
+                  <span>82%</span>
+                </div>
+                <div className="w-full h-2 bg-accent/10 rounded-full overflow-hidden">
+                  <div className="h-full bg-accent w-[82%] rounded-full shadow-glow" />
+                </div>
+              </div>
+              <p className="text-[10px] text-muted italic">Basado en tu red hospitalaria actual</p>
+            </div>
+          </div>
         </div>
       </div>
+
     </section>
   )
 }
 
 export default HeroPrincipal
+
+

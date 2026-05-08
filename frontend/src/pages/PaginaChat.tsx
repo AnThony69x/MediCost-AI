@@ -1,5 +1,8 @@
+import { useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, Sparkles, Zap } from 'lucide-react'
+import gsap from 'gsap'
+import { useGSAP } from '@gsap/react'
 import CajaChat from '../components/chat/CajaChat'
 
 const pasosGuia = [
@@ -10,36 +13,70 @@ const pasosGuia = [
 ]
 
 function PaginaChat() {
+  const container = useRef<HTMLDivElement>(null)
+
+  useGSAP(() => {
+    gsap.from('.chat-header', {
+      y: -20,
+      opacity: 0,
+      duration: 0.8,
+      ease: 'power3.out',
+    })
+    
+    gsap.from('.guide-step', {
+      y: 20,
+      opacity: 0,
+      stagger: 0.1,
+      duration: 0.6,
+      delay: 0.3,
+      ease: 'power3.out',
+    })
+  }, { scope: container })
+
   return (
-    <div className="flex min-h-0 flex-1 flex-col gap-5">
-      <header className="flex shrink-0 flex-wrap items-center gap-4 border-b border-stroke pb-4">
-        <Link
-          to="/"
-          className="inline-flex items-center gap-2 rounded-full border border-stroke bg-white px-3 py-2 text-sm font-semibold text-ink shadow-soft transition hover:-translate-y-0.5"
-        >
-          <ArrowLeft size={18} aria-hidden />
-          Volver
-        </Link>
-        <h1 className="font-display text-lg font-semibold text-ink md:text-xl">
-          Asistente MediCost-AI
-        </h1>
+    <div ref={container} className="flex min-h-0 flex-1 flex-col gap-6 pb-6">
+      <header className="chat-header glass-card flex shrink-0 items-center justify-between gap-4 rounded-3xl p-6">
+        <div className="flex items-center gap-4">
+          <Link
+            to="/"
+            className="group flex h-10 w-10 items-center justify-center rounded-full bg-white text-muted shadow-soft transition-all hover:bg-accent hover:text-white"
+          >
+            <ArrowLeft size={20} />
+          </Link>
+          <div>
+            <div className="flex items-center gap-2">
+              <h1 className="text-xl font-bold text-ink">
+                Asistente MediCost
+              </h1>
+              <span className="flex h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+            </div>
+            <p className="text-xs text-muted font-medium">
+              IA Médica en tiempo real
+            </p>
+          </div>
+        </div>
+        
+        <div className="hidden sm:flex items-center gap-2 rounded-full bg-accent/10 px-4 py-2 text-xs font-bold text-accent">
+          <Zap size={14} />
+          <span>ALTA PRECISIÓN</span>
+        </div>
       </header>
 
-      <section
-        className="shrink-0 rounded-2xl border border-stroke bg-white/90 p-4 shadow-soft"
-        aria-labelledby="guia-titulo"
-      >
-        <h2 id="guia-titulo" className="text-sm font-semibold text-ink">
-          ¿Cómo usar?
-        </h2>
-        <ol className="mt-2 list-decimal space-y-1 pl-5 text-sm text-muted">
-          {pasosGuia.map((texto) => (
-            <li key={texto}>{texto}</li>
-          ))}
-        </ol>
-      </section>
+      <div className="grid gap-4 sm:grid-cols-4">
+        {pasosGuia.map((texto, index) => (
+          <div
+            key={texto}
+            className="guide-step glass-card flex items-center gap-3 rounded-2xl p-4 transition-transform hover:scale-[1.02]"
+          >
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent/10 text-xs font-bold text-accent">
+              0{index + 1}
+            </div>
+            <p className="text-xs font-semibold text-ink/80">{texto}</p>
+          </div>
+        ))}
+      </div>
 
-      <div className="flex min-h-0 flex-1 flex-col">
+      <div className="flex min-h-0 flex-1 flex-col glass-card rounded-[2.5rem] overflow-hidden">
         <CajaChat variant="page" />
       </div>
     </div>
@@ -47,3 +84,4 @@ function PaginaChat() {
 }
 
 export default PaginaChat
+

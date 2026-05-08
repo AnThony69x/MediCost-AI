@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { HeartPulse } from 'lucide-react'
 import { LANDING_SECTIONS } from '../../constants/landingSections'
 import { useLandingSectionNav } from '../../hooks/useLandingSectionNav'
 
@@ -6,50 +7,69 @@ function PiePagina() {
   const irASeccion = useLandingSectionNav()
 
   return (
-    <footer className="relative mt-16 shrink-0 border-t border-strokeStrong bg-white/75 py-10 backdrop-blur-md supports-[backdrop-filter]:bg-white/55">
-      <div className="mx-auto flex max-w-6xl flex-col gap-8 px-6 md:flex-row md:items-start md:justify-between">
-        <div className="max-w-md">
-          <p className="font-display text-xl font-semibold text-ink">
-            MediCost-AI
-          </p>
-          <p className="mt-2 text-sm leading-relaxed text-muted">
-            Orientación sobre copagos, cobertura y hospitales en red, con
-            lenguaje claro y resultados que puedes contrastar.
-          </p>
+    <footer className="relative mt-24 border-t border-border bg-white py-16">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col gap-12 lg:flex-row lg:justify-between">
+          <div className="max-w-md">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent text-white shadow-glow">
+                <HeartPulse size={20} />
+              </div>
+              <p className="text-xl font-bold tracking-tight text-ink">
+                MediCost<span className="text-accent">AI</span>
+              </p>
+            </div>
+            <p className="text-muted leading-relaxed">
+              Democratizando el acceso a la información de salud. Calculamos tus costos médicos para que tomes decisiones informadas y ahorres en cada consulta.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-12 sm:grid-cols-3">
+            <div>
+              <p className="text-sm font-bold uppercase tracking-widest text-ink mb-6">Plataforma</p>
+              <nav className="flex flex-col gap-4">
+                {LANDING_SECTIONS.map(({ id, etiqueta }) => (
+                  <a
+                    key={id}
+                    href={`/#${id}`}
+                    className="text-sm text-muted transition-colors hover:text-accent"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      irASeccion(id)
+                    }}
+                  >
+                    {etiqueta}
+                  </a>
+                ))}
+              </nav>
+            </div>
+
+            <div>
+              <p className="text-sm font-bold uppercase tracking-widest text-ink mb-6">Acciones</p>
+              <div className="flex flex-col gap-4">
+                <Link to="/chat" className="text-sm text-muted transition-colors hover:text-accent">
+                  Simulador de Copago
+                </Link>
+                <Link to="/" className="text-sm text-muted transition-colors hover:text-accent">
+                  Centro de Ayuda
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-8">
-          <nav
-            className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-muted"
-            aria-label="Enlaces del pie"
-          >
-            {LANDING_SECTIONS.map(({ id, etiqueta }) => (
-              <a
-                key={id}
-                href={`/#${id}`}
-                className="rounded-md transition hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/35"
-                onClick={(e) => {
-                  e.preventDefault()
-                  irASeccion(id)
-                }}
-              >
-                {etiqueta}
-              </a>
-            ))}
-          </nav>
-          <Link
-            to="/chat"
-            className="inline-flex w-fit items-center justify-center rounded-full border border-accent/25 bg-accentSoft px-4 py-2 text-sm font-semibold text-accent transition hover:border-accent/40 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/35"
-          >
-            Ir al chat
-          </Link>
+
+        <div className="mt-16 border-t border-border pt-8 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+          <p className="text-xs text-muted/80 max-w-2xl italic">
+            * MediCost-AI proporciona estimaciones basadas en algoritmos de IA. La información es orientativa y no sustituye la asesoría profesional de tu aseguradora ni el criterio médico.
+          </p>
+          <p className="text-xs text-muted">
+            © {new Date().getFullYear()} MediCost-AI. Todos los derechos reservados.
+          </p>
         </div>
       </div>
-      <p className="mx-auto mt-8 max-w-6xl px-6 text-center text-xs text-muted/90 md:text-left">
-        La información es orientativa y no sustituye la consulta médica ni el
-        criterio de tu aseguradora.
-      </p>
     </footer>
   )
 }
 
 export default PiePagina
+

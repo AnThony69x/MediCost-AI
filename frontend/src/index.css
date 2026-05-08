@@ -1,67 +1,114 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;700&family=Space+Grotesk:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --canvas: 220 33% 98%;
+    --ink: 222 47% 11%;
+    --muted: 215 16% 47%;
+    --accent: 171 77% 34%;
+    --accent-foreground: 171 77% 95%;
+    --accent-soft: 171 77% 96%;
+    --border: 214 32% 91%;
+  }
+
   html {
-    scroll-behavior: smooth;
-    scroll-padding-top: 7rem;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    html {
-      scroll-behavior: auto;
-    }
-  }
-
-  * {
-    @apply box-border;
+    scroll-behavior: initial; /* Lenis handles this */
   }
 
   body {
-    @apply bg-canvas text-ink font-sans antialiased;
-    background-color: #f5f2eb;
-    background-image:
-      radial-gradient(ellipse 120% 80% at 100% -20%, rgba(184, 228, 220, 0.45), transparent 55%),
-      radial-gradient(ellipse 90% 70% at -10% 100%, rgba(232, 196, 168, 0.35), transparent 50%),
-      linear-gradient(165deg, #f8f6f0 0%, #f0ebe3 45%, #f7f4ee 100%);
-    background-attachment: fixed;
+    @apply bg-[#F8FAFC] text-ink font-sans antialiased selection:bg-accent/20 selection:text-accent;
+    min-height: 100vh;
+    overflow-x: hidden;
   }
 
-  ::selection {
-    @apply bg-accentSoft text-accent;
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display tracking-tight;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply backdrop-blur-md bg-white/70 border border-white/20 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)];
+  }
+  
+  .btn-primary {
+    @apply relative overflow-hidden px-6 py-3 rounded-full bg-accent text-white font-medium transition-all duration-300 hover:shadow-glow hover:scale-[1.02] active:scale-[0.98];
   }
 
-  a {
-    @apply text-inherit no-underline;
-  }
-
-  img {
-    @apply max-w-full block;
+  .btn-secondary {
+    @apply px-6 py-3 rounded-full border border-border bg-white/50 backdrop-blur-sm text-ink font-medium transition-all duration-300 hover:bg-white hover:shadow-soft;
   }
 }
 
 @layer utilities {
-  .glass {
-    @apply bg-white/70 backdrop-blur-md border border-stroke;
-  }
-
   .text-balance {
     text-wrap: balance;
   }
 
-  .surface-card {
-    @apply rounded-2xl border border-stroke bg-white/90 shadow-soft backdrop-blur-sm;
+  .shadow-soft {
+    shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
   }
 
-  .section-kicker {
-    @apply mb-3 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.12em] text-accent;
+  .shadow-glow {
+    box-shadow: 0 0 20px rgba(13, 109, 102, 0.3);
   }
 
-  .section-kicker::before {
-    content: '';
-    @apply h-px w-6 bg-accent/40;
+  /* GSAP Helper Classes */
+  .gsap-reveal {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .animate-bounce-subtle {
+    animation: bounce-subtle 4s ease-in-out infinite;
   }
 }
+
+@keyframes bounce-subtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #cbd5e1;
+}
+
+/* Lenis CSS */
+html.lenis {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+

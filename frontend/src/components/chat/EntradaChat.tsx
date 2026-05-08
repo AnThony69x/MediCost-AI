@@ -1,11 +1,11 @@
 import { Send } from 'lucide-react'
 import { useState } from 'react'
 
-type EntradaChatProps = {
+type EntradaChatProps = Readonly<{
   onEnviar: (texto: string) => void
   deshabilitado?: boolean
   mostrarTextoEnviar?: boolean
-}
+}>
 
 function EntradaChat({
   onEnviar,
@@ -21,38 +21,36 @@ function EntradaChat({
   }
 
   return (
-    <div className="flex items-center gap-3 rounded-2xl border border-stroke bg-white px-4 py-3 shadow-soft">
-      <input
-        type="text"
-        className="flex-1 bg-transparent text-sm text-ink outline-none placeholder:text-muted"
-        placeholder="Ej: dolor en el pecho, fiebre, dolor de cabeza…"
+    <div className="flex items-end gap-3 rounded-3xl border border-border bg-white/50 px-4 py-3 shadow-soft backdrop-blur-xl transition-all duration-300 focus-within:border-accent/30 focus-within:bg-white focus-within:shadow-medium">
+      <textarea
+        rows={1}
+        className="min-h-[44px] flex-1 resize-none bg-transparent py-2.5 text-sm leading-relaxed text-ink outline-none placeholder:text-muted/60"
+        placeholder="Describe tus síntomas aquí..."
         value={texto}
         onChange={(event) => setTexto(event.target.value)}
         onKeyDown={(event) => {
-          if (event.key === 'Enter') enviar()
+          if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault()
+            enviar()
+          }
         }}
         disabled={deshabilitado}
       />
       <button
         type="button"
         onClick={enviar}
-        disabled={deshabilitado}
-        className={`inline-flex items-center justify-center gap-2 rounded-full bg-info font-semibold text-white transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60 ${
-          mostrarTextoEnviar ? 'px-4 py-2 text-sm' : 'h-10 w-10 shrink-0'
+        disabled={deshabilitado || !texto.trim()}
+        className={`btn-primary flex items-center justify-center gap-2 transition-all disabled:opacity-30 disabled:scale-100 disabled:shadow-none ${
+          mostrarTextoEnviar ? 'px-6 py-2.5 text-sm' : 'h-11 w-11 shrink-0 p-0'
         }`}
         aria-label="Enviar mensaje"
       >
-        {mostrarTextoEnviar ? (
-          <>
-            <Send size={18} aria-hidden />
-            Enviar
-          </>
-        ) : (
-          <Send size={18} />
-        )}
+        <Send size={18} className={mostrarTextoEnviar ? '' : 'ml-0.5'} />
+        {mostrarTextoEnviar && <span>Enviar</span>}
       </button>
     </div>
   )
 }
 
 export default EntradaChat
+
